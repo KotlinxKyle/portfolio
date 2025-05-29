@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KotlinxKyle - Quality Analyst & Android Developer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #1C1B1F;
+            background: linear-gradient(135deg, #7F39FB 0%, #6750A4 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            padding: 40px 0;
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 2px 2px 4px rgba(0,0,0,0.3), 0 0 20px rgba(255,255,255,0.2); }
+            to { text-shadow: 2px 2px 4px rgba(0,0,0,0.3), 0 0 30px rgba(255,255,255,0.4); }
+        }
+
+        .header h2 {
+            font-size: 1.5rem;
+            font-weight: 300;
+            opacity: 0.9;
+        }
+
+        .money-section {
+            background: linear-gradient(135deg, #3DDC84 0%, #4CAF50 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            transform: translateY(0);
+            transition: all 0.3s ease;
+            border: 3px dashed rgba(255,255,255,0.3);
+        }
+
+        .money-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .money-section h3 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .money-section p {
+            font-size: 1.1rem;
+            text-align: center;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .money-section .highlight {
+            background: rgba(255,255,255,0.2);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-style: italic;
+            border-left: 5px solid rgba(255,255,255,0.5);
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        .skill-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skill-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(127,57,251,0.1), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .skill-card:hover::before {
+            left: 100%;
+        }
+
+        .skill-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+        }
+
+        .skill-card h3 {
+            font-size: 2.2rem;
+            margin-bottom: 25px;
+            color: #1C1B1F;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .skill-card .icon {
+            font-size: 2.5rem;
+            background: linear-gradient(45deg, #7F39FB, #6750A4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .qa-card {
+            border-top: 5px solid #3DDC84;
+        }
+
+        .android-card {
+            border-top: 5px solid #7F39FB;
+        }
+
+        .skill-list {
+            list-style: none;
+            margin-top: 20px;
+        }
+
+        .skill-list li {
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            position: relative;
+            padding-left: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .skill-list li:hover {
+            color: #7F39FB;
+            transform: translateX(10px);
+        }
+
+        .skill-list li::before {
+            content: '▶';
+            position: absolute;
+            left: 0;
+            color: #3DDC84;
+            font-size: 0.8rem;
+        }
+
+        .skill-list li:last-child {
+            border-bottom: none;
+        }
+
+        .description {
+            margin: 20px 0;
+            color: #49454F;
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+
+        .contact-section {
+            text-align: center;
+            margin-top: 60px;
+            padding: 40px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            color: white;
+        }
+
+        .contact-section h3 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .contact-section p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .skill-card {
+                padding: 30px 20px;
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>KotlinxKyle</h1>
+            <h2>Quality Analyst & Android Developer</h2>
+        </header>
+
+        <section class="money-section pulse">
+            <h3>🍜 Life Goals & Financial Aspirations 💰</h3>
+            <p>Welcome to my portfolio! I'm a passionate developer who has successfully mastered the ancient art of converting caffeine into code, and I'm particularly fond of the revolutionary concept of <strong>exchanging my technical skills for legal tender</strong>.</p>
+            
+            <div class="highlight">
+                "I enjoy the finer things in life: like having a roof over my head, the luxury of three meals a day, and the wild extravagance of paying my bills on time. Some call it 'basic human needs' - I call it 'living the dream!'"
+            </div>
+            
+            <p>My current life motto: <em>"Will debug for food"</em> 🐛🍕</p>
+            <p>I'm also quite partial to the idea of my bank account having more than just pocket lint and expired coupons. Revolutionary, I know!</p>
+        </section>
+
+        <div class="skills-grid">
+            <div class="skill-card qa-card">
+                <h3>
+                    <span class="icon">🔍</span>
+                    Quality Analyst Excellence
+                </h3>
+                <p class="description">
+                    Dedicated to ensuring software quality through comprehensive testing methodologies and meticulous attention to detail. I find bugs before they find users (and before they find my paycheck).
+                </p>
+                <ul class="skill-list">
+                    <li>Manual & Automated Testing</li>
+                    <li>Test Case Design & Execution</li>
+                    <li>Bug Tracking & Documentation</li>
+                    <li>Regression Testing</li>
+                    <li>API Testing</li>
+                    <li>Performance Testing</li>
+                    <li>User Acceptance Testing (UAT)</li>
+                    <li>Agile/Scrum Testing Methodologies</li>
+                    <li>Test Planning & Strategy</li>
+                    <li>Quality Metrics & Reporting</li>
+                </ul>
+            </div>
+
+            <div class="skill-card android-card">
+                <h3>
+                    <span class="icon">📱</span>
+                    Android Development
+                </h3>
+                <p class="description">
+                    Crafting robust and user-friendly Android applications using modern development practices and Kotlin expertise. Building apps that users love (and that actually work).
+                </p>
+                <ul class="skill-list">
+                    <li>Kotlin Programming</li>
+                    <li>Android SDK & Android Studio</li>
+                    <li>Material Design Implementation</li>
+                    <li>MVVM Architecture Pattern</li>
+                    <li>REST API Integration</li>
+                    <li>Room Database</li>
+                    <li>Retrofit & OkHttp</li>
+                    <li>Coroutines & Flow</li>
+                    <li>Jetpack Compose</li>
+                    <li>Git Version Control</li>
+                    <li>Unit Testing & Espresso</li>
+                    <li>Play Store Deployment</li>
+                </ul>
+            </div>
+        </div>
+
+        <section class="contact-section">
+            <h3>Let's Build Something Amazing Together</h3>
+            <p>Ready to turn ideas into reality? Let's connect and create solutions that make a difference!</p>
+            <p><em>(And help me maintain my sophisticated lifestyle of eating regularly)</em></p>
+        </section>
+    </div>
+</body>
+</html>
