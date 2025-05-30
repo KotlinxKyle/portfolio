@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual & Automated Testing - KotlinxKyle</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #1C1B1F;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            padding: 40px 0;
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 2px 2px 4px rgba(0,0,0,0.3), 0 0 20px rgba(255,255,255,0.2); }
+            to { text-shadow: 2px 2px 4px rgba(0,0,0,0.3), 0 0 30px rgba(255,255,255,0.4); }
+        }
+
+        .header h2 {
+            font-size: 1.8rem;
+            font-weight: 300;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .nav-back {
+            display: inline-block;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            font-size: 1.1rem;
+            padding: 10px 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-back:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .testing-overview {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .testing-overview h3 {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            color: #667eea;
+            text-align: center;
+        }
+
+        .testing-overview p {
+            font-size: 1.2rem;
+            color: #49454F;
+            text-align: center;
+            line-height: 1.8;
+        }
+
+        .testing-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .testing-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .testing-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(102,126,234,0.1), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .testing-card:hover::before {
+            left: 100%;
+        }
+
+        .testing-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+        }
+
+        .manual-card {
+            border-top: 5px solid #ff6b6b;
+        }
+
+        .automated-card {
+            border-top: 5px solid #4ecdc4;
+        }
+
+        .testing-card h3 {
+            font-size: 2.2rem;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .testing-card .icon {
+            font-size: 2.5rem;
+        }
+
+        .manual-card .icon {
+            color: #ff6b6b;
+        }
+
+        .automated-card .icon {
+            color: #4ecdc4;
+        }
+
+        .testing-process {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        .process-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .process-step {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .process-step:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(102,126,234,0.3);
+        }
+
+        .process-step .step-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            opacity: 0.8;
+            margin-bottom: 15px;
+        }
+
+        .process-step h4 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+        }
+
+        .skill-list {
+            list-style: none;
+            margin-top: 20px;
+        }
+
+        .skill-list li {
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            position: relative;
+            padding-left: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .skill-list li:hover {
+            color: #667eea;
+            transform: translateX(10px);
+        }
+
+        .skill-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #4ecdc4;
+            font-weight: bold;
+        }
+
+        .skill-list li:last-child {
+            border-bottom: none;
+        }
+
+        .tools-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .tool-item {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .tool-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .tool-item .tool-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .tool-item h4 {
+            font-size: 1.1rem;
+            color: #333;
+        }
+
+        .experience-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        .experience-item {
+            background: rgba(102,126,234,0.1);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border-left: 5px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .experience-item:hover {
+            background: rgba(102,126,234,0.15);
+            transform: translateX(10px);
+        }
+
+        .interactive-demo {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .demo-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+        }
+
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102,126,234,0.3);
+        }
+
+        .test-result {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .test-result.show {
+            opacity: 1;
+        }
+
+        .test-result.pass {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .test-result.fail {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        @media (max-width: 768px) {
+            .testing-types {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .testing-card {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Testing Expertise</h1>
+            <h2>Manual & Automated Testing Mastery</h2>
+            <a href="index.html" class="nav-back">← Back to Portfolio</a>
+        </header>
+
+        <section class="testing-overview">
+            <h3>🎯 Testing Philosophy</h3>
+            <p>Quality isn't an accident—it's the result of systematic testing, attention to detail, and a deep understanding of user needs. I combine manual testing intuition with automated testing efficiency to deliver bulletproof software.</p>
+        </section>
+
+        <div class="testing-types">
+            <div class="testing-card manual-card">
+                <h3>
+                    <span class="icon">🔍</span>
+                    Manual Testing
+                </h3>
+                <p style="margin-bottom: 20px; color: #49454F; font-size: 1.1rem;">Human intuition meets systematic exploration. Finding the bugs that automation misses.</p>
+                <ul class="skill-list">
+                    <li>Exploratory Testing</li>
+                    <li>User Experience Testing</li>
+                    <li>Edge Case Discovery</li>
+                    <li>Cross-Browser Testing</li>
+                    <li>Mobile Device Testing</li>
+                    <li>Accessibility Testing</li>
+                    <li>Usability Testing</li>
+                    <li>Ad-hoc Testing</li>
+                    <li>Smoke Testing</li>
+                    <li>Sanity Testing</li>
+                </ul>
+            </div>
+
+            <div class="testing-card automated-card">
+                <h3>
+                    <span class="icon">🤖</span>
+                    Automated Testing
+                </h3>
+                <p style="margin-bottom: 20px; color: #49454F; font-size: 1.1rem;">Scalable, repeatable, and fast. Building robust test suites that run while you sleep.</p>
+                <ul class="skill-list">
+                    <li>Selenium WebDriver</li>
+                    <li>TestNG & JUnit</li>
+                    <li>API Testing (Postman, REST Assured)</li>
+                    <li>CI/CD Integration</li>
+                    <li>Page Object Model</li>
+                    <li>Data-Driven Testing</li>
+                    <li>Regression Test Suites</li>
+                    <li>Performance Testing</li>
+                    <li>Mobile Test Automation</li>
+                    <li>Test Reporting & Analytics</li>
+                </ul>
+            </div>
+        </div>
+
+        <section class="testing-process">
+            <h3 style="text-align: center; font-size: 2.2rem; margin-bottom: 20px; color: #667eea;">My Testing Process</h3>
+            <div class="process-steps">
+                <div class="process-step">
+                    <div class="step-number">1</div>
+                    <h4>Requirements Analysis</h4>
+                    <p>Understanding what needs to be tested and defining clear acceptance criteria.</p>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">2</div>
+                    <h4>Test Planning</h4>
+                    <p>Creating comprehensive test strategies and identifying the right testing approaches.</p>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">3</div>
+                    <h4>Test Design</h4>
+                    <p>Writing detailed test cases and scenarios that cover all possible user journeys.</p>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">4</div>
+                    <h4>Test Execution</h4>
+                    <p>Running tests systematically and documenting results with precision.</p>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">5</div>
+                    <h4>Bug Reporting</h4>
+                    <p>Clear, reproducible bug reports that help developers fix issues quickly.</p>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">6</div>
+                    <h4>Continuous Improvement</h4>
+                    <p>Analyzing test results and optimizing processes for better coverage and efficiency.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="tools-section">
+            <h3 style="text-align: center; font-size: 2.2rem; margin-bottom: 20px; color: #667eea;">Testing Tools Arsenal</h3>
+            <div class="tools-grid">
+                <div class="tool-item">
+                    <div class="tool-icon">🌐</div>
+                    <h4>Selenium</h4>
+                </div>
+                <div class="tool-item">
+                    <div class="tool-icon">📱</div>
+                    <h4>Appium</h4>
+                </div>
+                <div class="tool-item">
+                    <div class="tool-icon">🚀</div>
+                    <h4>Postman</h4>
+                </div>
+                <div class="tool-item">
+                    <div class="tool-icon">⚡</div>
+                    <h4>JMeter</h4>
+                </div>
+                <div class="tool-item">
+                    <div class="tool-icon">🔧</div>
+                    <h4>TestNG</h4>
+                </div>
+                <div class="tool-item">
+                    <div class="tool-icon">📊</div>
+                    <h4>Allure Reports</h4>
+                </div>
+                <div class="tool-item">
+                    <div class="tool-icon">🐛</div>
+                    <h4>JIRA</h4>
+                </div>
+                <div class="tool-item">
+                    <div class="tool-icon">🔍</div>
+                    <h4>Charles Proxy</h4>
+                </div>
+            </div>
+        </section>
+
+        <section class="experience-section">
+            <h3 style="text-align: center; font-size: 2.2rem; margin-bottom: 30px; color: #667eea;">Testing Experience Highlights</h3>
+            
+            <div class="experience-item">
+                <h4 style="color: #667eea; font-size: 1.3rem; margin-bottom: 10px;">🏆 Complex E-commerce Platform Testing</h4>
+                <p>Led comprehensive testing of a multi-vendor e-commerce platform with 500+ test cases covering payment processing, inventory management, and user workflows. Achieved 99.9% bug detection rate pre-production.</p>
+            </div>
+
+            <div class="experience-item">
+                <h4 style="color: #667eea; font-size: 1.3rem; margin-bottom: 10px;">⚡ Performance Testing Excellence</h4>
+                <p>Identified and resolved critical performance bottlenecks in a high-traffic web application, improving response times by 40% and reducing server load by 30% through strategic load testing.</p>
+            </div>
+
+            <div class="experience-item">
+                <h4 style="color: #667eea; font-size: 1.3rem; margin-bottom: 10px;">🤖 Test Automation Framework</h4>
+                <p>Built a scalable test automation framework from scratch using Selenium and TestNG, reducing manual testing time by 60% and enabling continuous integration with 95% test reliability.</p>
+            </div>
+
+            <div class="experience-item">
+                <h4 style="color: #667eea; font-size: 1.3rem; margin-bottom: 10px;">📱 Mobile App Testing Mastery</h4>
+                <p>Executed comprehensive testing across 15+ mobile devices and OS versions, ensuring consistent user experience and functionality across the entire mobile ecosystem.</p>
+            </div>
+        </section>
+
+        <section class="interactive-demo">
+            <h3 style="font-size: 2.2rem; margin-bottom: 20px; color: #667eea;">Interactive Testing Demo</h3>
+            <p style="margin-bottom: 30px; color: #49454F;">Experience a simple testing workflow simulation</p>
+            
+            <button class="demo-button" onclick="runManualTest()">🔍 Run Manual Test</button>
+            <button class="demo-button" onclick="runAutomatedTest()">🤖 Run Automated Test</button>
+            <button class="demo-button" onclick="runPerformanceTest()">⚡ Performance Test</button>
+            
+            <div id="testResult" class="test-result"></div>
+        </section>
+    </div>
+
+    <script>
+        function runManualTest() {
+            const resultDiv = document.getElementById('testResult');
+            const scenarios = [
+                { test: "User Login Functionality", result: "pass", message: "✅ Manual Test PASSED: All login scenarios working correctly" },
+                { test: "Form Validation", result: "fail", message: "❌ Manual Test FAILED: Email validation missing for special characters" },
+                { test: "Navigation Flow", result: "pass", message: "✅ Manual Test PASSED: All navigation links functioning properly" }
+            ];
+            
+            const randomScenario = scenarios[Math.floor(Math.random() * scenarios.length)];
+            
+            resultDiv.className = `test-result ${randomScenario.result} show`;
+            resultDiv.textContent = randomScenario.message;
+            
+            setTimeout(() => {
+                resultDiv.classList.remove('show');
+            }, 4000);
+        }
+
+        function runAutomatedTest() {
+            const resultDiv = document.getElementById('testResult');
+            const testSuites = [
+                { suite: "Regression Suite", result: "pass", message: "✅ Automated Test PASSED: 156/156 test cases executed successfully" },
+                { suite: "API Test Suite", result: "pass", message: "✅ Automated Test PASSED: All 47 API endpoints responding correctly" },
+                { suite: "Cross-browser Suite", result: "fail", message: "❌ Automated Test FAILED: 2 UI elements misaligned in Safari" }
+            ];
+            
+            const randomSuite = testSuites[Math.floor(Math.random() * testSuites.length)];
+            
+            resultDiv.className = `test-result ${randomSuite.result} show`;
+            resultDiv.textContent = randomSuite.message;
+            
+            setTimeout(() => {
+                resultDiv.classList.remove('show');
+            }, 4000);
+        }
+
+        function runPerformanceTest() {
+            const resultDiv = document.getElementById('testResult');
+            const performanceResults = [
+                { metric: "Load Time", result: "pass", message: "✅ Performance Test PASSED: Average load time 1.2s (Target: <2s)" },
+                { metric: "Concurrent Users", result: "pass", message: "✅ Performance Test PASSED: 1000 concurrent users handled successfully" },
+                { metric: "Memory Usage", result: "fail", message: "❌ Performance Test FAILED: Memory leak detected after 30min usage" }
+            ];
+            
+            const randomResult = performanceResults[Math.floor(Math.random() * performanceResults.length)];
+            
+            resultDiv.className = `test-result ${randomResult.result} show`;
+            resultDiv.textContent = randomResult.message;
+            
+            setTimeout(() => {
+                resultDiv.classList.remove('show');
+            }, 4000);
+        }
+    </script>
+</body>
+</html>
