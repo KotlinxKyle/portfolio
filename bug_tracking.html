@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bug Tracking & Documentation - KotlinxKyle</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #1C1B1F;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            padding: 40px 0;
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 2px 2px 4px rgba(0,0,0,0.3), 0 0 20px rgba(255,255,255,0.2); }
+            to { text-shadow: 2px 2px 4px rgba(0,0,0,0.3), 0 0 30px rgba(255,255,255,0.4); }
+        }
+
+        .header h2 {
+            font-size: 1.8rem;
+            font-weight: 300;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .nav-back {
+            display: inline-block;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            font-size: 1.1rem;
+            padding: 10px 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-back:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .overview-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .overview-section h3 {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            color: #ff6b6b;
+            text-align: center;
+        }
+
+        .overview-section p {
+            font-size: 1.2rem;
+            color: #49454F;
+            text-align: center;
+            line-height: 1.8;
+        }
+
+        .bug-lifecycle {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .lifecycle-step {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            position: relative;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border-top: 4px solid;
+        }
+
+        .lifecycle-step:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+
+        .lifecycle-step:nth-child(1) { border-top-color: #ff6b6b; }
+        .lifecycle-step:nth-child(2) { border-top-color: #ffa502; }
+        .lifecycle-step:nth-child(3) { border-top-color: #3742fa; }
+        .lifecycle-step:nth-child(4) { border-top-color: #2ed573; }
+        .lifecycle-step:nth-child(5) { border-top-color: #ff4757; }
+        .lifecycle-step:nth-child(6) { border-top-color: #5352ed; }
+
+        .lifecycle-step .step-number {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin: 0 auto 15px;
+        }
+
+        .lifecycle-step h4 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: #1C1B1F;
+        }
+
+        .lifecycle-step p {
+            font-size: 0.9rem;
+            color: #49454F;
+        }
+
+        .bug-report-demo {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        .demo-controls {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .demo-button {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+        }
+
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255,107,107,0.3);
+        }
+
+        .demo-button.active {
+            background: linear-gradient(135deg, #2ed573 0%, #17a2b8 100%);
+        }
+
+        .bug-report-display {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 20px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+
+        .bug-report-display.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .bug-field {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #ff6b6b;
+        }
+
+        .bug-field label {
+            font-weight: bold;
+            color: #ff6b6b;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .bug-field .content {
+            color: #49454F;
+            line-height: 1.6;
+        }
+
+        .severity-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: white;
+            margin-right: 10px;
+        }
+
+        .severity-critical { background: #ff4757; }
+        .severity-high { background: #ffa502; }
+        .severity-medium { background: #3742fa; }
+        .severity-low { background: #2ed573; }
+
+        .bug-tracker {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        .tracker-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .bug-list {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .bug-item {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .bug-item:hover {
+            background: #f8f9fa;
+            padding-left: 30px;
+        }
+
+        .bug-item:last-child {
+            border-bottom: none;
+        }
+
+        .bug-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .bug-id {
+            font-weight: bold;
+            color: #ff6b6b;
+        }
+
+        .bug-status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        .status-open { background: #ff6b6b; }
+        .status-in-progress { background: #ffa502; }
+        .status-resolved { background: #2ed573; }
+        .status-closed { background: #747d8c; }
+
+        .bug-title {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            color: #1C1B1F;
+        }
+
+        .bug-meta {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .documentation-tools {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .tool-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(102,126,234,0.3);
+        }
+
+        .tool-card .tool-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .tool-card h5 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .tool-card p {
+            font-size: 0.95rem;
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+
+        .best-practices {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        .practices-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .practice-item {
+            background: rgba(255,107,107,0.1);
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 5px solid #ff6b6b;
+            transition: all 0.3s ease;
+        }
+
+        .practice-item:hover {
+            background: rgba(255,107,107,0.15);
+            transform: translateX(5px);
+        }
+
+        .practice-item h5 {
+            color: #ff6b6b;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+
+        .practice-item p {
+            color: #49454F;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 768px) {
+            .bug-lifecycle {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .bug-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Bug Tracking</h1>
+            <h2>Systematic Defect Management & Documentation</h2>
+            <a href="#" class="nav-back">← Back to Portfolio</a>
+        </header>
+
+        <section class="overview-section">
+            <h3>🐛 From Discovery to Resolution</h3>
+            <p>Effective bug tracking transforms chaos into clarity. Every defect tells a story—from initial discovery through resolution—and proper documentation ensures that story guides improvement, prevents regression, and builds better software.</p>
+        </section>
+
+        <div class="bug-lifecycle">
+            <div class="lifecycle-step">
+                <div class="step-number">1</div>
+                <h4>Discovery</h4>
+                <p>Bug identified through testing, user reports, or monitoring systems</p>
+            </div>
+            <div class="lifecycle-step">
+                <div class="step-number">2</div>
+                <h4>Logging</h4>
+                <p>Detailed bug report created with reproduction steps and evidence</p>
+            </div>
+            <div class="lifecycle-step">
+                <div class="step-number">3</div>
+                <h4>Triage</h4>
+                <p>Priority, severity, and assignment determined by development team</p>
+            </div>
+            <div class="lifecycle-step">
+                <div class="step-number">4</div>
+                <h4>Resolution</h4>
+                <p>Development team implements fix and provides solution details</p>
+            </div>
+            <div class="lifecycle-step">
+                <div class="step-number">5</div>
+                <h4>Verification</h4>
+                <p>QA team confirms fix resolves issue without introducing new problems</p>
+            </div>
+            <div class="lifecycle-step">
+                <div class="step-number">6</div>
+                <h4>Closure</h4>
+                <p>Bug marked as resolved with lessons learned documented</p>
+            </div>
+        </div>
+
+        <section class="bug-report-demo">
+            <h3 style="text-align: center; font-size: 2.2rem; margin-bottom: 20px; color: #ff6b6b;">Interactive Bug Reports</h3>
+            <p style="text-align: center; margin-bottom: 30px; color: #49454F;">Explore different types of bug reports and their detailed documentation</p>
+            
+            <div class="demo-controls">
+                <button class="demo-button" onclick="showBugReport('ui')">🎨 UI Defect</button>
+                <button class="demo-button" onclick="showBugReport('functional')">⚙️ Functional Bug</button>
+                <button class="demo-button" onclick="showBugReport('performance')">🚀 Performance Issue</button>
+                <button class="demo-button" onclick="showBugReport('security')">🔒 Security Vulnerability</button>
+            </div>
+
+            <div id="bugReportDisplay" class="bug-report-display"></div>
+        </section>
+
+        <section class="bug-tracker">
+            <h3 style="text-align: center; font-size: 2.2rem; margin-bottom: 20px; color: #ff6b6b;">Live Bug Tracker Dashboard</h3>
+            
+            <div class="tracker-stats">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalBugs">127</div>
+                    <div class="stat-label">Total Bugs</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="openBugs">23</div>
+                    <div class="stat-label">Open</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="inProgressBugs">8</div>
+                    <div class="stat-label">In Progress</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="resolvedBugs">96</div>
+                    <div class="stat-label">Resolved</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="avgResolutionTime">2.3</div>
+                    <div class="stat-label">Avg Days</div>
+                </div>
+            </div>
+
+            <div class="bug-list" id="bugList">
+                <!-- Bug items will be populated by JavaScript -->
+            </div>
+        </section>
+
+        <section class="documentation-tools">
+            <h3 style="text-align: center; font-size: 2.2rem; margin-bottom: 20px; color: #ff6b6b;">Documentation Tools & Technologies</h3>
+            
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <span class="tool-icon">🎯</span>
+                    <h5>JIRA</h5>
+                    <p>Comprehensive issue tracking with custom workflows, detailed reporting, and seamless integration with development tools.</p>
+                </div>
+                <div class="tool-card">
+                    <span class="tool-icon">📊</span>
+                    <h5>Azure DevOps</h5>
+                    <p>End-to-end project management with integrated bug tracking, test management, and continuous integration pipelines.</p>
+                </div>
+                <div class="tool-card">
+                    <span class="tool-icon">🔧</span>
+                    <h5>Bugzilla</h5>
+                    <p>Open-source bug tracking system with powerful search capabilities and customizable field configurations.</p>
+                </div>
+                <div class="tool-card">
+                    <span class="tool-icon">📱</span>
+                    <h5>TestRail</h5>
+                    <p>Test case management platform with integrated defect tracking and comprehensive test execution reporting.</p>
+                </div>
+                <div class="tool-card">
+                    <span class="tool-icon">🔍</span>
+                    <h5>Mantis</h5>
+                    <p>Web-based bug tracking system with email notifications, file attachments, and customizable workflows.</p>
+                </div>
+                <div class="tool-card">
+                    <span class="tool-icon">⚡</span>
+                    <h5>Linear</h5>
+                    <p>Modern issue tracking with lightning-fast performance, keyboard shortcuts, and streamlined workflows.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="best-practices">
+            <h3 style="text-align: center; font-size: 2.2rem; margin-bottom: 20px; color: #ff6b6b;">Documentation Best Practices</h3>
+            
+            <div class="practices-grid">
+                <div class="practice-item">
+                    <h5>🎯 Clear Reproduction Steps</h5>
+                    <p>Provide step-by-step instructions that allow anyone to reproduce the bug consistently.</p>
+                </div>
+                <div class="practice-item">
+                    <h5>📸 Visual Evidence</h5>
+                    <p>Include screenshots, videos, and logs to provide clear evidence of the defect behavior.</p>
+                </div>
+                <div class="practice-item">
+                    <h5>🏷️ Proper Classification</h5>
+                    <p>Accurately categorize bugs by severity, priority, and component to enable effective triage.</p>
+                </div>
+                <div class="practice-item">
+                    <h5>🔍 Environment Details</h5>
+                    <p>Document testing environment, browser versions, device types, and configuration settings.</p>
+                </div>
+                <div class="practice-item">
+                    <h5>📋 Expected vs Actual</h5>
+                    <p>Clearly describe expected behavior versus actual behavior to eliminate ambiguity.</p>
+                </div>
+                <div class="practice-item">
+                    <h5>🔄 Status Updates</h5>
+                    <p>Maintain regular updates on bug status, investigation progress, and resolution efforts.</p>
+                </div>
+                <div class="practice-item">
+                    <h5>🎨 User Impact</h5>
+                    <p>Describe how the bug affects end users and business operations to guide prioritization.</p>
+                </div>
+                <div class="practice-item">
+                    <h5>📈 Metrics Tracking</h5>
+                    <p>Monitor bug discovery rates, resolution times, and quality trends for continuous improvement.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const bugReportExamples = {
+            ui: {
+                id: "BUG-UI-001",
+                title: "Navigation menu overlaps content on mobile devices",
+                severity: "High",
+                priority: "High",
+                status: "Open",
+                reporter: "KotlinxKyle",
+                assignee: "Frontend Team",
+                description: "The navigation menu extends beyond viewport boundaries on mobile devices, causing content overlap and poor user experience.",
+                environment: "Mobile Safari iOS 15.6, Chrome Mobile 98.0, Viewport: 375x667px",
+                reproductionSteps: [
+                    "Navigate to homepage on mobile device",
+                    "Tap hamburger menu icon",
+                    "Observe menu overlay behavior",
+                    "Attempt to scroll page content"
+                ],
+                expectedResult: "Menu should display within viewport boundaries without overlapping main content",
+                actualResult: "Menu extends beyond screen edges and overlaps page content, making navigation difficult",
+                attachments: "mobile_menu_overlap.png, console_errors.log"
+            },
+            functional: {
+                id: "BUG-FUNC-002",
+                title: "Password reset email not sent for valid user accounts",
+                severity: "Critical",
+                priority: "Critical",
+                status: "In Progress",
+                reporter: "KotlinxKyle",
+                assignee: "Backend Team",
+                description: "Users cannot reset passwords as reset emails are not being sent despite valid email addresses being in the system.",
+                environment: "Production server, SMTP configured, All email providers tested",
+                reproductionSteps: [
+                    "Navigate to login page",
+                    "Click 'Forgot Password' link",
+                    "Enter valid registered email address",
+                    "Click 'Send Reset Link' button",
+                    "Check email inbox and spam folder"
+                ],
+                expectedResult: "Password reset email should be sent within 2 minutes of request",
+                actualResult: "No email received after 30 minutes, server logs show SMTP errors",
+                attachments: "server_logs.txt, smtp_configuration.json, error_screenshots.zip"
+            },
+            performance: {
+                id: "BUG-PERF-003",
+                title: "Dashboard loading time exceeds 8 seconds on initial load",
+                severity: "Medium",
+                priority: "High",
+                status: "Resolved",
+                reporter: "KotlinxKyle",
+                assignee: "Performance Team",
+                description: "User dashboard takes excessive time to load on first visit, impacting user experience and potentially increasing bounce rates.",
+                environment: "Chrome 98.0, Firefox 97.0, Edge 98.0, Average connection speed: 50Mbps",
+                reproductionSteps: [
+                    "Clear browser cache and cookies",
+                    "Navigate to application login page",
+                    "Log in with valid credentials",
+                    "Start timer when dashboard begins loading",
+                    "Record time until all elements are interactive"
+                ],
+                expectedResult: "Dashboard should load within 3 seconds on broadband connections",
+                actualResult: "Dashboard takes 8-12 seconds to fully load, blocking user interactions",
+                attachments: "performance_audit.pdf, network_timeline.har, lighthouse_report.html"
+            },
+            security: {
+                id: "BUG-SEC-004",
+                title: "SQL injection vulnerability in user search functionality",
+                severity: "Critical",
+                priority: "Critical",
+                status: "Resolved",
+                reporter: "KotlinxKyle",
+                assignee: "Security Team",
+                description: "User search input is not properly sanitized, allowing SQL injection attacks that could compromise database integrity.",
+                environment: "Production and staging environments, MySQL 8.0, PHP 8.1",
+                reproductionSteps: [
+                    "Navigate to user search page",
+                    "Enter SQL injection payload: '; DROP TABLE users; --",
+                    "Submit search form",
+                    "Observe database query execution"
+                ],
+                expectedResult: "Input should be sanitized and parameterized to prevent SQL injection",
+                actualResult: "Raw SQL query executed with potential for database manipulation",
+                attachments: "security_audit.pdf, sql_injection_proof.png, database_logs.txt"
+            }
+        };
+
+        const bugs = [
+            { id: "BUG-001", title: "Login button unresponsive on mobile", status: "open", severity: "high", assignee: "Frontend Team", created: "2 days ago" },
+            { id: "BUG-002", title: "Payment processing timeout error", status: "in-progress", severity: "critical", assignee: "Backend Team", created: "5 days ago" },
+            { id: "BUG-003", title: "Dashboard chart rendering issues", status: "resolved", severity: "medium", assignee: "UI Team", created: "1 week ago" },
+            { id: "BUG-004", title: "Email notifications not sending", status: "open", severity: "high", assignee: "DevOps Team", created: "3 days ago" },
+            { id: "BUG-005", title: "Search results pagination broken", status: "closed", severity: "low", assignee: "Frontend Team", created: "2 weeks ago" }
+        ];
+
+        function showBugReport(type) {
+            const bugReport = bugReportExamples[type];
+            const display = document.getElementById('bugReportDisplay');
+            
+            // Remove active class from all buttons
+            document.querySelectorAll('.demo-button').forEach(btn => btn.classList.remove('active'));
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+            
+            const html = `
+                <div class="bug-field">
+                    <label>Bug ID:</label>
+                    <div class="content">${bugReport.id}</div>
+                </div>
+                <div class="bug-field">
+                    <label>Title:</label>
+                    <div class="content">${bugReport.title}</div>
+                </div>
+                <div class="bug-field">
+                    <label>Severity & Priority:</label>
+                    <div class="content">
+                        <span class="severity-badge severity-${bugReport.severity.toLowerCase()}">${bugReport.severity}</span>
+                        <span class="severity-badge severity-${bugReport.priority.toLowerCase()}">Priority: ${bugReport.priority}</span>
+                    </div>
+                </div>
+                <div class="bug-field">
+                    <label>Status:</label>
+                    <div class="content">
+                        <span class="bug-status status-${bugReport.status.toLowerCase().replace(' ', '-')}">${bugReport.status}</span>
+                    </div>
+                </div>
+                <div class="bug-field">
+                    <label>Description:</label>
+                    <div class="content">${bugReport.description}</div>
+                </div>
+                <div class="bug-field">
+                    <label>Environment:</label>
+                    <div class="content">${bugReport.environment}</div>
+                </div>
+                <div class="bug-field">
+                    <label>Reproduction Steps:</label>
+                    <div class="content">
+                        <ol>
+                            ${bugReport.reproductionSteps.map(step => `<li>${step}</li>`).join('')}
+                        </ol>
+                    </div>
+                </div>
+                <div class="bug-field">
+                    <label>Expected Result:</label>
+                    <div class="content">${bugReport.expectedResult}</div>
+                </div>
+                <div class="bug-field">
+                    <label>Actual Result:</label>
+                    <div class="content">${bugReport.actualResult}</div>
+                </div>
+                <div class="bug-field">
+                    <label>Attachments:</label>
+                    <div class="content">${bugReport.attachments}</div>
+                </div>
+                <div class="bug-field">
+                    <label>Reporter:</label>
+                    <div class="content">${bugReport.reporter}</div>
+                </div>
+                <div class="bug-field">
+                    <label>Assignee:</label>
+                    <div class="content">${bugReport.assignee}</div>
+                </div>
+            `;
+            
+            display.innerHTML = html;
+            display.classList.add('show');
+        }
+
+        function populateBug
