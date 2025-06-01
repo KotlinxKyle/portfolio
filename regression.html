@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Regression Testing - KotlinxKyle</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: #1C1B1F;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .header {
+      text-align: center;
+      color: white;
+      margin-bottom: 40px;
+      padding: 40px 0;
+    }
+
+    .header h1 {
+      font-size: 3.5rem;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      animation: glow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes glow {
+      from { text-shadow: 2px 2px 4px rgba(0,0,0,0.3), 0 0 20px rgba(255,255,255,0.2); }
+      to { text-shadow: 2px 2px 4px rgba(0,0,0,0.3), 0 0 30px rgba(255,255,255,0.4); }
+    }
+
+    .header h2 {
+      font-size: 1.8rem;
+      font-weight: 300;
+      opacity: 0.9;
+      margin-bottom: 20px;
+    }
+
+    .nav-back {
+      display: inline-block;
+      color: rgba(255,255,255,0.8);
+      text-decoration: none;
+      font-size: 1.1rem;
+      padding: 10px 20px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: 25px;
+      transition: all 0.3s ease;
+    }
+
+    .nav-back:hover {
+      background: rgba(255,255,255,0.1);
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    .overview-section {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 40px;
+      border-radius: 20px;
+      margin-bottom: 40px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+      backdrop-filter: blur(10px);
+    }
+
+    .overview-section h3 {
+      font-size: 2.2rem;
+      margin-bottom: 20px;
+      color: #667eea;
+      text-align: center;
+    }
+
+    .overview-section p {
+      font-size: 1.2rem;
+      color: #49454F;
+      text-align: center;
+      line-height: 1.8;
+    }
+
+    .regression-types {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+    }
+
+    .regression-card {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+      border-top: 5px solid #4ecdc4;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .regression-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+    }
+
+    .regression-card h4 {
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+      color: #1C1B1F;
+      text-align: center;
+    }
+
+    .regression-card p {
+      color: #49454F;
+      font-size: 1rem;
+      line-height: 1.6;
+      text-align: center;
+    }
+
+    .best-practices {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 40px;
+      border-radius: 20px;
+      margin-bottom: 40px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    }
+
+    .best-practices h3 {
+      text-align: center;
+      font-size: 2.2rem;
+      margin-bottom: 20px;
+      color: #667eea;
+    }
+
+    .practices-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin-top: 30px;
+    }
+
+    .practice-item {
+      background: rgba(102,126,234,0.1);
+      padding: 20px;
+      border-radius: 12px;
+      border-left: 5px solid #667eea;
+      transition: all 0.3s ease;
+    }
+
+    .practice-item:hover {
+      background: rgba(102,126,234,0.15);
+      transform: translateX(5px);
+    }
+
+    .practice-item h5 {
+      color: #667eea;
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+    }
+
+    .practice-item p {
+      color: #49454F;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 768px) {
+      .header h1 {
+        font-size: 2.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1>Regression Testing</h1>
+      <h2>Safeguarding Quality Over Time</h2>
+      <a href="index.html" class="nav-back">← Back to Portfolio</a>
+    </header>
+
+    <section class="overview-section">
+      <h3>🔄 What is Regression Testing?</h3>
+      <p>Regression testing ensures that new code changes don’t break existing functionality. It’s the safety net for evolving software, ensuring past features remain reliable and future-ready.</p>
+    </section>
+
+    <div class="regression-types">
+      <div class="regression-card">
+        <h4>🔍 Selective Regression</h4>
+        <p>Targeted retesting of specific areas affected by code changes, ensuring updates don't impact critical workflows.</p>
+      </div>
+      <div class="regression-card">
+        <h4>🤖 Automated Regression</h4>
+        <p>Building comprehensive automated test suites that run after every update to catch issues early and often.</p>
+      </div>
+      <div class="regression-card">
+        <h4>📈 Full Regression</h4>
+        <p>Comprehensive end-to-end testing for major releases to validate system-wide stability and integration.</p>
+      </div>
+    </div>
+
+    <section class="best-practices">
+      <h3>⚙️ Regression Testing Best Practices</h3>
+      <div class="practices-list">
+        <div class="practice-item">
+          <h5>🎯 Prioritize Test Cases</h5>
+          <p>Focus on high-impact areas and critical user journeys for efficient regression coverage.</p>
+        </div>
+        <div class="practice-item">
+          <h5>🔄 Automate Repetitive Tests</h5>
+          <p>Use automation to validate stable features quickly, freeing time for exploratory testing.</p>
+        </div>
+        <div class="practice-item">
+          <h5>📝 Maintain Test Relevance</h5>
+          <p>Regularly update regression suites to reflect evolving features and remove outdated cases.</p>
+        </div>
+        <div class="practice-item">
+          <h5>⚡ Parallel Execution</h5>
+          <p>Run automated tests in parallel to speed up feedback and minimize bottlenecks.</p>
+        </div>
+        <div class="practice-item">
+          <h5>🔍 Validate Fixes Thoroughly</h5>
+          <p>Ensure that fixes work across browsers, devices, and user profiles to avoid regressions.</p>
+        </div>
+        <div class="practice-item">
+          <h5>📊 Track Metrics</h5>
+          <p>Measure test execution times, pass/fail rates, and defect trends to optimize processes.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
