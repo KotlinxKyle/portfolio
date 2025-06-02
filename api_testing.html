@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Testing Tool - KotlinxKyle</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .tool-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .input-group input, .input-group select, .input-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input:focus, .input-group select:focus, .input-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .method-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .method-btn {
+            padding: 10px 15px;
+            border: 2px solid #e1e5e9;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .method-btn:hover {
+            background: #f8f9fa;
+        }
+
+        .method-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .method-btn.get.active { background: #28a745; border-color: #28a745; }
+        .method-btn.post.active { background: #007bff; border-color: #007bff; }
+        .method-btn.put.active { background: #ffc107; border-color: #ffc107; color: #333; }
+        .method-btn.delete.active { background: #dc3545; border-color: #dc3545; }
+
+        .headers-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .header-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background: #545b62;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            padding: 8px 12px;
+            font-size: 14px;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .response-container {
+            background: #1e1e1e;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+
+        .response-header {
+            border-bottom: 1px solid #444;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .status-success { color: #50fa7b; }
+        .status-error { color: #ff5555; }
+        .status-warning { color: #f1fa8c; }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .examples-section {
+            margin-top: 30px;
+        }
+
+        .example-card {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .example-card h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .example-code {
+            background: #e9ecef;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 13px;
+            overflow-x: auto;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .tool-container {
+                padding: 20px;
+            }
+            
+            .method-selector {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .header-row {
+                grid-template-columns: 1fr;
+                gap: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 API Testing Tool</h1>
+            <p>Because manually testing APIs is like eating soup with a fork - technically possible, but why would you? 🍴</p>
+        </div>
+
+        <div class="tool-container">
+            <div class="input-group">
+                <label for="url">API Endpoint URL</label>
+                <input type="text" id="url" placeholder="https://jsonplaceholder.typicode.com/posts/1" value="https://jsonplaceholder.typicode.com/posts/1">
+            </div>
+
+            <div class="input-group">
+                <label>HTTP Method</label>
+                <div class="method-selector">
+                    <button class="method-btn get active" data-method="GET">GET</button>
+                    <button class="method-btn post" data-method="POST">POST</button>
+                    <button class="method-btn put" data-method="PUT">PUT</button>
+                    <button class="method-btn delete" data-method="DELETE">DELETE</button>
+                </div>
+            </div>
+
+            <div class="headers-section">
+                <h3>Headers</h3>
+                <div id="headers-container">
+                    <div class="header-row">
+                        <input type="text" placeholder="Header Key (e.g., Content-Type)" class="header-key">
+                        <input type="text" placeholder="Header Value (e.g., application/json)" class="header-value">
+                        <button class="btn btn-danger" onclick="removeHeader(this)">×</button>
+                    </div>
+                </div>
+                <button class="btn btn-secondary" onclick="addHeader()">+ Add Header</button>
+            </div>
+
+            <div class="input-group" id="body-section" style="display: none;">
+                <label for="body">Request Body (JSON)</label>
+                <textarea id="body" rows="6" placeholder='{"title": "My Test Post", "body": "This is a test", "userId": 1}'></textarea>
+            </div>
+
+            <button class="btn" onclick="sendRequest()">
+                Send Request 🚀
+                <span id="loading" class="loading" style="display: none;"></span>
+            </button>
+        </div>
+
+        <div id="response-section" style="display: none;">
+            <div class="tool-container">
+                <h3>Response</h3>
+                <div class="response-container" id="response-content"></div>
+            </div>
+        </div>
+
+        <div class="tool-container examples-section">
+            <h3>🎯 Quick Test Examples</h3>
+            <p style="margin-bottom: 20px;">Too lazy to type URLs? I've got you covered! (Because I'm basically a digital butler, but with more bugs) 🤖</p>
+            
+            <div class="example-card">
+                <h4>JSONPlaceholder - Get Post</h4>
+                <div class="example-code">GET https://jsonplaceholder.typicode.com/posts/1</div>
+                <button class="btn btn-secondary" onclick="loadExample('https://jsonplaceholder.typicode.com/posts/1', 'GET')">Try This</button>
+            </div>
+
+            <div class="example-card">
+                <h4>Random Dog API</h4>
+                <div class="example-code">GET https://dog.ceo/api/breeds/image/random</div>
+                <button class="btn btn-secondary" onclick="loadExample('https://dog.ceo/api/breeds/image/random', 'GET')">Try This</button>
+            </div>
+
+            <div class="example-card">
+                <h4>Create New Post</h4>
+                <div class="example-code">POST https://jsonplaceholder.typicode.com/posts</div>
+                <button class="btn btn-secondary" onclick="loadExample('https://jsonplaceholder.typicode.com/posts', 'POST', '{\"title\": \"My Awesome Post\", \"body\": \"This post was created via API testing!\", \"userId\": 1}')">Try This</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentMethod = 'GET';
+        
+        // Method selection
+        document.querySelectorAll('.method-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.method-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                currentMethod = this.dataset.method;
+                
+                const bodySection = document.getElementById('body-section');
+                if (currentMethod === 'POST' || currentMethod === 'PUT') {
+                    bodySection.style.display = 'block';
+                } else {
+                    bodySection.style.display = 'none';
+                }
+            });
+        });
+
+        function addHeader() {
+            const container = document.getElementById('headers-container');
+            const headerRow = document.createElement('div');
+            headerRow.className = 'header-row';
+            headerRow.innerHTML = `
+                <input type="text" placeholder="Header Key" class="header-key">
+                <input type="text" placeholder="Header Value" class="header-value">
+                <button class="btn btn-danger" onclick="removeHeader(this)">×</button>
+            `;
+            container.appendChild(headerRow);
+        }
+
+        function removeHeader(btn) {
+            btn.parentElement.remove();
+        }
+
+        function loadExample(url, method, body = '') {
+            document.getElementById('url').value = url;
+            
+            // Set method
+            document.querySelectorAll('.method-btn').forEach(b => b.classList.remove('active'));
+            document.querySelector(`[data-method="${method}"]`).classList.add('active');
+            currentMethod = method;
+            
+            const bodySection = document.getElementById('body-section');
+            if (method === 'POST' || method === 'PUT') {
+                bodySection.style.display = 'block';
+                document.getElementById('body').value = body;
+            } else {
+                bodySection.style.display = 'none';
+            }
+        }
+
+        async function sendRequest() {
+            const url = document.getElementById('url').value.trim();
+            const body = document.getElementById('body').value.trim();
+            const loading = document.getElementById('loading');
+            const responseSection = document.getElementById('response-section');
+            const responseContent = document.getElementById('response-content');
+
+            if (!url) {
+                alert('Please enter a URL! Even I need directions sometimes 🗺️');
+                return;
+            }
+
+            loading.style.display = 'inline-block';
+            responseSection.style.display = 'none';
+
+            // Collect headers
+            const headers = {};
+            document.querySelectorAll('.header-row').forEach(row => {
+                const key = row.querySelector('.header-key').value.trim();
+                const value = row.querySelector('.header-value').value.trim();
+                if (key && value) {
+                    headers[key] = value;
+                }
+            });
+
+            // Add default content-type for POST/PUT if not specified
+            if ((currentMethod === 'POST' || currentMethod === 'PUT') && body && !headers['Content-Type']) {
+                headers['Content-Type'] = 'application/json';
+            }
+
+            try {
+                const startTime = performance.now();
+                
+                const requestOptions = {
+                    method: currentMethod,
+                    headers: headers,
+                    mode: 'cors'
+                };
+
+                if ((currentMethod === 'POST' || currentMethod === 'PUT') && body) {
+                    requestOptions.body = body;
+                }
+
+                const response = await fetch(url, requestOptions);
+                const endTime = performance.now();
+                const responseTime = Math.round(endTime - startTime);
+
+                let responseText = '';
+                const contentType = response.headers.get('content-type');
+                
+                if (contentType && contentType.includes('application/json')) {
+                    const jsonData = await response.json();
+                    responseText = JSON.stringify(jsonData, null, 2);
+                } else {
+                    responseText = await response.text();
+                }
+
+                // Format response
+                let statusClass = 'status-success';
+                if (response.status >= 400) {
+                    statusClass = 'status-error';
+                } else if (response.status >= 300) {
+                    statusClass = 'status-warning';
+                }
+
+                responseContent.innerHTML = `
+                    <div class="response-header">
+                        <div class="${statusClass}">
+                            <strong>Status:</strong> ${response.status} ${response.statusText}
+                        </div>
+                        <div><strong>Response Time:</strong> ${responseTime}ms</div>
+                        <div><strong>Content-Type:</strong> ${response.headers.get('content-type') || 'N/A'}</div>
+                    </div>
+                    <div><strong>Response Body:</strong></div>
+                    <pre>${responseText}</pre>
+                `;
+
+                responseSection.style.display = 'block';
+
+            } catch (error) {
+                responseContent.innerHTML = `
+                    <div class="response-header">
+                        <div class="status-error">
+                            <strong>Error:</strong> Request Failed
+                        </div>
+                    </div>
+                    <div><strong>Error Details:</strong></div>
+                    <pre>${error.message}</pre>
+                    <div style="margin-top: 15px; color: #f1fa8c;">
+                        💡 <strong>Troubleshooting Tips:</strong>
+                        • Check if the URL is correct and accessible
+                        • Some APIs require authentication or specific headers
+                        • CORS policy might block the request (this is browser-specific)
+                        • The server might be down (happens to the best of us)
+                    </div>
+                `;
+                responseSection.style.display = 'block';
+            } finally {
+                loading.style.display = 'none';
+            }
+        }
+
+        // Allow Enter key to send request
+        document.getElementById('url').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendRequest();
+            }
+        });
+    </script>
+</body>
+</html>
