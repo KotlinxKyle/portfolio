@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Git Version Control - KotlinxKyle</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #1C1B1F;
+            background: linear-gradient(135deg, #7F39FB 0%, #6750A4 100%); /* Android theme gradient */
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            padding: 40px 0;
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 2px 2px 4px rgba(0,0,0,0.3), 0 0 20px rgba(255,255,255,0.2); }
+            to { text-shadow: 2px 2px 4px rgba(0,0,0,0.3), 0 0 30px rgba(255,255,255,0.4); }
+        }
+
+        .header h2 {
+            font-size: 1.8rem;
+            font-weight: 300;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .nav-back {
+            display: inline-block;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            font-size: 1.1rem;
+            padding: 10px 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-back:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .overview-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .overview-section h3 {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            color: #7F39FB; /* Kotlin purple */
+            text-align: center;
+        }
+
+        .overview-section p {
+            font-size: 1.2rem;
+            color: #49454F;
+            text-align: center;
+            line-height: 1.8;
+        }
+
+        .git-concepts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .concept-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            border-top: 5px solid #7F39FB; /* Kotlin purple border */
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .concept-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(127,57,251,0.1), transparent); /* Lighter Kotlin purple shimmer */
+            transition: left 0.6s ease;
+        }
+
+        .concept-card:hover::before {
+            left: 100%;
+        }
+
+        .concept-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+        }
+
+        .concept-card h4 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: #1C1B1F;
+            text-align: center;
+        }
+
+        .concept-card p {
+            color: #49454F;
+            font-size: 1.1rem;
+            line-height: 1.7;
+            text-align: center;
+        }
+
+        .git-workflow {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        .workflow-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .workflow-item {
+            background: linear-gradient(135deg, #7F39FB 0%, #6750A4 100%); /* Android theme gradient */
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .workflow-item:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(127,57,251,0.3);
+        }
+
+        .workflow-item h5 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .workflow-item p {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        .best-practices {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        .best-practices h3 {
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            color: #7F39FB;
+        }
+
+        .practices-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .practice-item {
+            background: rgba(127,57,251,0.1); /* Lighter Kotlin purple background */
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 5px solid #7F39FB; /* Kotlin purple border */
+            transition: all 0.3s ease;
+        }
+
+        .practice-item:hover {
+            background: rgba(127,57,251,0.15);
+            transform: translateX(5px);
+        }
+
+        .practice-item h5 {
+            color: #7F39FB;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+
+        .practice-item p {
+            color: #49454F;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .interactive-demo {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .demo-button {
+            background: linear-gradient(135deg, #7F39FB 0%, #6750A4 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+        }
+
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(127,57,251,0.3);
+        }
+
+        .demo-output {
+            background: #282c34;
+            color: #abb2bf;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            text-align: left;
+            font-size: 0.95rem;
+            white-space: pre-wrap;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.5s ease;
+        }
+
+        .demo-output.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .code-snippet {
+            background: #282c34; /* Dark background for code */
+            color: #abb2bf; /* Light text for code */
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            font-size: 0.95rem;
+            overflow-x: auto;
+            margin-top: 15px;
+            line-height: 1.4;
+        }
+        .code-command { color: #61afef; } /* Blue */
+        .code-comment { color: #5c6370; font-style: italic; } /* Gray italic */
+        .code-output { color: #98c379; } /* Green */
+        .code-error { color: #e06c75; } /* Red */
+
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            .git-concepts, .workflow-steps, .practices-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Git Version Control</h1>
+            <h2>Collaborative Development & Code Management</h2>
+            <a href="index.html" class="nav-back">← Back to Portfolio</a>
+        </header>
+
+        <section class="overview-section">
+            <h3>🌳 The Foundation of Team-Based Software Development</h3>
+            <p>Git is a distributed version control system (DVCS) that is indispensable for modern software development. It allows developers to track changes to source code, coordinate work among multiple contributors, and maintain different versions of a project with ease. My proficiency in Git ensures smooth collaboration, robust change management, and the ability to navigate complex project histories.</p>
+        </section>
+
+        <div class="git-concepts">
+            <div class="concept-card">
+                <h4>Distributed System</h4>
+                <p>Every developer has a full copy of the repository, including its entire history, enabling offline work and robust collaboration.</p>
+            </div>
+            <div class="concept-card">
+                <h4>Repository (Repo)</h4>
+                <p>The project's central database of all files and their revisions. It includes the working directory, staging area, and the `.git` directory.</p>
+            </div>
+            <div class="concept-card">
+                <h4>Commit</h4>
+                <p>A snapshot of your repository at a specific point in time. Each commit represents a set of changes and has a unique ID and a commit message.</p>
+            </div>
+            <div class="concept-card">
+                <h4>Branch</h4>
+                <p>An independent line of development. Branches allow multiple developers to work on features or fixes concurrently without affecting the main codebase.</p>
+            </div>
+            <div class="concept-card">
+                <h4>Merge & Rebase</h4>
+                <p>Processes to integrate changes from one branch into another. Merging creates a new merge commit, while rebasing rewrites history to create a linear sequence.</p>
+            </div>
+            <div class="concept-card">
+                <h4>Remote</h4>
+                <p>A version of your repository hosted on the internet or a network, allowing for sharing and collaboration (e.g., GitHub, GitLab, Bitbucket).</p>
+            </div>
+        </div>
+
+        <section class="git-workflow">
+            <h3 style="text-align: center; font-size: 2.2rem; margin-bottom: 20px; color: #7F39FB;">Essential Git Workflow</h3>
+            <p style="text-align: center; margin-bottom: 30px; color: #49454F;">Common commands for managing code changes</p>
+            
+            <div class="workflow-steps">
+                <div class="workflow-item">
+                    <h5>`git clone`</h5>
+                    <p>Creates a local copy of a remote repository.</p>
+                </div>
+                <div class="workflow-item">
+                    <h5>`git add`</h5>
+                    <p>Stages changes from the working directory to the staging area for the next commit.</p>
+                </div>
+                <div class="workflow-item">
+                    <h5>`git commit`</h5>
+                    <p>Records staged changes into the local repository with a descriptive message.</p>
+                </div>
+                <div class="workflow-item">
+                    <h5>`git push`</h5>
+                    <p>Uploads local commits to a remote repository.</p>
+                </div>
+                <div class="workflow-item">
+                    <h5>`git pull`</h5>
+                    <p>Fetches and merges changes from a remote repository into the local branch.</p>
+                </div>
+                <div class="workflow-item">
+                    <h5>`git branch` / `checkout`</h5>
+                    <p>Manages branches (create, list) and switches between them.</p>
+                </div>
+                <div class="workflow-item">
+                    <h5>`git merge`</h5>
+                    <p>Integrates changes from one branch into another.</p>
+                </div>
+                <div class="workflow-item">
+                    <h5>`git status`</h5>
+                    <p>Shows the status of changes as untracked, modified, or staged.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="best-practices">
+            <h3>⚙️ Git Best Practices for Android Development</h3>
+            <div class="practices-list">
+                <div class="practice-item">
+                    <h5>🎯 Use a Feature Branch Workflow</h5>
+                    <p>Develop new features or fixes in separate branches, merging into `develop` or `main` after review.</p>
+                </div>
+                <div class="practice-item">
+                    <h5>📝 Write Atomic & Descriptive Commits</h5>
+                    <p>Each commit should contain a single, logical change with a clear, concise message.</p>
+                </div>
+                <div class="practice-item">
+                    <h5>🔄 Pull Frequently</h5>
+                    <p>Regularly pull changes from the remote repository to minimize merge conflicts.</p>
+                </div>
+                <div class="practice-item">
+                    <h5>📊 Leverage `.gitignore`</h5>
+                    <p>Exclude generated files, build outputs, and sensitive data from version control.</p>
+                </div>
+                <div class="practice-item">
+                    <h5>🔍 Review Code Before Committing</h5>
+                    <p>Before committing, use `git status` and `git diff` to review your changes.</p>
+                </div>
+                <div class="practice-item">
+                    <h5>💡 Understand Rebase vs. Merge</h5>
+                    <p>Choose the appropriate integration strategy based on team preference and desired history linearity.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="interactive-demo">
+            <h3 style="font-size: 2.2rem; margin-bottom: 20px; color: #7F39FB;">Git Workflow Simulation</h3>
+            <p style="margin-bottom: 30px; color: #49454F;">Simulate a basic Git workflow: commit, branch, and merge</p>
+            
+            <button class="demo-button" onclick="simulateGitWorkflow()">🌱 Start Workflow</button>
+            
+            <div id="demoOutput" class="demo-output"></div>
+        </section>
+    </div>
+
+    <script>
+        function simulateGitWorkflow() {
+            const outputDiv = document.getElementById('demoOutput');
+            let steps = [
+                "<span class='code-command'>$ git status</span>",
+                "<span class='code-output'>On branch main\nNothing to commit, working tree clean</span>",
+                "",
+                "<span class='code-command'>$ git checkout -b feature/new-ui</span>",
+                "<span class='code-output'>Switched to a new branch 'feature/new-ui'</span>",
+                "",
+                "<span class='code-comment'>// (Make some changes to a file)</span>",
+                "<span class='code-command'>$ git add .</span>",
+                "<span class='code-command'>$ git commit -m \"feat: Implement new user interface\"</span>",
+                "<span class='code-output'>[feature/new-ui 1a2b3c4] feat: Implement new user interface\n 1 file changed, 10 insertions(+)</span>",
+                "",
+                "<span class='code-command'>$ git checkout main</span>",
+                "<span class='code-output'>Switched to branch 'main'</span>",
+                "",
+                "<span class='code-command'>$ git merge feature/new-ui</span>",
+                "<span class='code-output'>Updating de4dbe5..1a2b3c4\nFast-forward\n myapp/src/main/res/layout/activity_main.xml | 10 ++++++++++\n 1 file changed, 10 insertions(+)</span>",
+                "✅ Workflow complete: Feature merged into main!"
+            ];
+            let currentStep = 0;
+            outputDiv.textContent = ""; // Clear previous output
+            outputDiv.classList.add('show');
+
+            const interval = setInterval(() => {
+                if (currentStep < steps.length) {
+                    outputDiv.innerHTML += steps[currentStep] + "\n";
+                    currentStep++;
+                } else {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        outputDiv.classList.remove('show');
+                    }, 2000); // Hide after 2 seconds
+                }
+            }, 1000); // Add a new step every 1 second
+        }
+    </script>
+</body>
+</html>
