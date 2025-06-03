@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jetpack Compose - KotlinxKyle</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #1C1B1F;
+            background: linear-gradient(135deg, #7F39FB 0%, #6750A4 100%); /* Android theme gradient */
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            padding: 40px 0;
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 2px 2px 4px rgba(0,0,0,0.3), 0 0 20px rgba(255,255,255,0.2); }
+            to { text-shadow: 2px 2px 4px rgba(0,0,0,0.3), 0 0 30px rgba(255,255,255,0.4); }
+        }
+
+        .header h2 {
+            font-size: 1.8rem;
+            font-weight: 300;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .nav-back {
+            display: inline-block;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            font-size: 1.1rem;
+            padding: 10px 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-back:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .overview-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .overview-section h3 {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            color: #7F39FB; /* Kotlin purple */
+            text-align: center;
+        }
+
+        .overview-section p {
+            font-size: 1.2rem;
+            color: #49454F;
+            text-align: center;
+            line-height: 1.8;
+        }
+
+        .compose-concepts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .concept-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            border-top: 5px solid #7F39FB; /* Kotlin purple border */
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .concept-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(127,57,251,0.1), transparent); /* Lighter Kotlin purple shimmer */
+            transition: left 0.6s ease;
+        }
+
+        .concept-card:hover::before {
+            left: 100%;
+        }
+
+        .concept-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+        }
+
+        .concept-card h4 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: #1C1B1F;
+            text-align: center;
+        }
+
+        .concept-card p {
+            color: #49454F;
+            font-size: 1.1rem;
+            line-height: 1.7;
+            text-align: left;
+        }
+
+        .code-snippet {
+            background: #282c34; /* Dark background for code */
+            color: #abb2bf; /* Light text for code */
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            font-size: 0.95rem;
+            overflow-x: auto;
+            margin-top: 15px;
+            line-height: 1.4;
+        }
+
+        .code-keyword { color: #c678dd; } /* Purple */
+        .code-string { color: #98c379; } /* Green */
+        .code-type { color: #e06c75; } /* Red */
+        .code-comment { color: #5c6370; font-style: italic; } /* Gray italic */
+        .code-function { color: #61afef; } /* Blue */
+        .code-number { color: #d19a66; } /* Orange */
+
+        .advantages-section, .examples-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        .advantages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .advantage-item {
+            background: linear-gradient(135deg, #7F39FB 0%, #6750A4 100%); /* Android theme gradient */
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .advantage-item:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(127,57,251,0.3);
+        }
+
+        .advantage-item h5 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .advantage-item p {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        .example-card {
+            background: rgba(127,57,251,0.1); /* Lighter Kotlin purple background */
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 5px solid #7F39FB; /* Kotlin purple border */
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .example-card:hover {
+            background: rgba(127,57,251,0.15);
+            transform: translateX(5px);
+        }
+
+        .example-card h5 {
+            color: #7F39FB;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .best-practices {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        .best-practices h3 {
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            color: #7F39FB;
+        }
+
+        .practices-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .practice-item {
+            background: rgba(127,57,251,0.1); /* Lighter Kotlin purple background */
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 5px solid #7F39FB; /* Kotlin purple border */
+            transition: all 0.3s ease;
+        }
+
+        .practice-item:hover {
+            background: rgba(127,57,251,0.15);
+            transform: translateX(5px);
+        }
+
+        .practice-item h5 {
+            color: #7F39FB;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+
+        .practice-item p {
+            color: #49454F;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .interactive-demo {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .demo-button {
+            background: linear-gradient(135deg, #7F39FB 0%, #6750A4 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+        }
+
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(127,57,251,0.3);
+        }
+
+        .demo-output {
+            background: #282c34;
+            color: #abb2bf;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            text-align: left;
+            font-size: 0.95rem;
+            white-space: pre-wrap;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.5s ease;
+        }
+
+        .demo-output.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            .compose-concepts, .advantages-grid, .practices-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Jetpack Compose</h1>
+            <h2>Modern Android UI Development</h2>
+            <a href="index.html" class="nav-back">← Back to Portfolio</a>
+        </header>
+
+        <section class="overview-section">
+            <h3>🚀 Building Beautiful UIs with Declarative Simplicity</h3>
+            <p>Jetpack Compose is Android's modern toolkit for building native user interfaces. It simplifies and accelerates UI development with a declarative approach, allowing you to describe your UI's state rather than managing complex view hierarchies. My expertise in Compose enables me to craft responsive, performant, and delightful user experiences with less code and greater efficiency.</p>
+        </section>
+
+        <div class="compose-concepts">
+            <div class="concept-card">
+                <h4>Declarative UI Paradigm</h4>
+                <p>You describe what your UI should look like for a given state, and Compose takes care of updating it when the state changes. This is a shift from the imperative XML-based approach.</p>
+            </div>
+            <div class="concept-card">
+                <h4>Composables</h4>
+                <p>Fundamental building blocks of Compose UI. Composables are regular Kotlin functions annotated with `@Composable` that define a piece of UI.</p>
+            </div>
+            <div class="concept-card">
+                <h4>State Management</h4>
+                <p>Compose automatically tracks changes to state objects (e.g., `mutableStateOf`, `StateFlow`, `LiveData`) and recomposes (redraws) only the affected parts of the UI.</p>
+            </div>
+            <div class="concept-card">
+                <h4>Modifiers</h4>
+                <p>Powerful elements used to decorate or augment Composables, allowing for styling, layout, and interaction behavior (e.g., padding, click listeners, size).</p>
+            </div>
+            <div class="concept-card">
+                <h4>Composition & Recomposition</h4>
+                <p>Compose builds a tree of Composables (Composition). When state changes, Compose intelligently re-executes only the affected Composables (Recomposition).</p>
+            </div>
+            <div class="concept-card">
+                <h4>Preview Annotations</h4>
+                <p>The `@Preview` annotation allows you to render Composables directly in Android Studio without running the app on a device or emulator, speeding up UI development.</p>
+            </div>
+        </div>
+
+        <section class="advantages-section">
+            <h3 style="text-align: center; font-size: 2.2rem; margin-bottom: 20px; color: #7F39FB;">Advantages of Jetpack Compose</h3>
+            <p style="text-align: center; margin-bottom: 30px; color: #49454F;">Why Compose is a game-changer for Android UI development</p>
+            
+            <div class="advantages-grid">
+                <div class="advantage-item">
+                    <h5>⚡ Faster Development</h5>
+                    <p>Less code, intuitive API, and powerful tooling (like Previews) accelerate UI creation.</p>
+                </div>
+                <div class="advantage-item">
+                    <h5>📏 Less Code</h5>
+                    <p>Significantly reduces boilerplate code compared to XML layouts, making code more readable and maintainable.</p>
+                </div>
+                <div class="advantage-item">
+                    <h5>💯 Intuitive & Consistent</h5>
+                    <p>Leverages Kotlin, providing a unified language for UI and logic, leading to more consistent development.</p>
+                </div>
+                <div class="advantage-item">
+                    <h5>⚙️ Powerful & Extensible</h5>
+                    <p>Highly customizable and extensible, allowing for complex and unique UI designs.</p>
+                </div>
+                <div class="advantage-item">
+                    <h5>✅ Easy to Test</h5>
+                    <p>Declarative nature and stateless Composables simplify UI testing.</p>
+                </div>
+                <div class="advantage-item">
+                    <h5>📱 Cross-Device Support</h5>
+                    <p>Designed to easily adapt UIs across different screen sizes, orientations, and form factors.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="examples-section">
+            <h3 style="text-align: center; font-size: 2.2rem; margin-bottom: 20px; color: #7F39FB;">Jetpack Compose Code Samples</h3>
+            <p style="text-align: center; margin-bottom: 30px; color: #49454F;">Practical examples showcasing core Compose features</p>
+            
+            <div class="example-card">
+                <h5>Basic Text & Button Composable</h5>
+                <div class="code-snippet">
+                    <span class="code-keyword">@Composable</span>
+                    <span class="code-keyword">fun</span> <span class="code-function">SimpleGreeting</span>(<span class="code-keyword">name</span>: <span class="code-type">String</span>, <span class="code-function">onButtonClick</span>: () -&gt; <span class="code-type">Unit</span>) {
+                        <span class="code-keyword">Column</span>(<span class="code-keyword">modifier</span> = <span class="code-type">Modifier</span>.<span class="code-function">padding</span>(<span class="code-number">16.dp</span>)) {
+                            <span class="code-keyword">Text</span>(<span class="code-string">"Hello, $name!"</span>)
+                            <span class="code-keyword">Spacer</span>(<span class="code-keyword">modifier</span> = <span class="code-type">Modifier</span>.<span class="code-function">height</span>(<span class="code-number">8.dp</span>))
+                            <span class="code-keyword">Button</span>(<span class="code-function">onClick</span> = <span class="code-function">onButtonClick</span>) {
+                                <span class="code-keyword">Text</span>(<span class="code-string">"Click Me"</span>)
+                            }
+                        }
+                    }
+                </div>
+            </div>
+
+            <div class="example-card">
+                <h5>State Management with `remember` & `mutableStateOf`</h5>
+                <div class="code-snippet">
+                    <span class="code-keyword">@Composable</span>
+                    <span class="code-keyword">fun</span> <span class="code-function">Counter</span>() {
+                        <span class="code-type">var</span> <span class="code-keyword">count</span> <span class="code-keyword">by remember</span> { <span class="code-keyword">mutableStateOf</span>(<span class="code-number">0</span>) }
+
+                        <span class="code-keyword">Column</span>(<span class="code-keyword">horizontalAlignment</span> = <span class="code-type">Alignment</span>.CenterHorizontally) {
+                            <span class="code-keyword">Text</span>(<span class="code-string">"Count: $count"</span>, <span class="code-keyword">style</span> = <span class="code-type">MaterialTheme</span>.typography.headlineMedium)
+                            <span class="code-keyword">Button</span>(<span class="code-function">onClick</span> = { <span class="code-keyword">count</span>++ }) {
+                                <span class="code-keyword">Text</span>(<span class="code-string">"Increment"</span>)
+                            }
+                        }
+                    }
+                </div>
+            </div>
+
+            <div class="example-card">
+                <h5>Using Modifiers for Styling and Layout</h5>
+                <div class="code-snippet">
+                    <span class="code-keyword">@Composable</span>
+                    <span class="code-keyword">fun</span> <span class="code-function">StyledText</span>() {
+                        <span class="code-keyword">Text</span>(
+                            <span class="code-string">"Hello, Modifier!"</span>,
+                            <span class="code-keyword">modifier</span> = <span class="code-type">Modifier</span>
+                                .<span class="code-function">fillMaxWidth</span>()
+                                .<span class="code-function">padding</span>(<span class="code-number">24.dp</span>)
+                                .<span class="code-function">background</span>(<span class="code-type">Color</span>.LightGray)
+                                .<span class="code-function">clickable</span> { <span class="code-keyword">println</span>(<span class="code-string">"Text clicked!"</span>) }
+                        )
+                    }
+                </div>
+            </div>
+
+            <div class="example-card">
+                <h5>Simple List (`LazyColumn`) Example</h5>
+                <div class="code-snippet">
+                    <span class="code-keyword">@Composable</span>
+                    <span class="code-keyword">fun</span> <span class="code-function">MySimpleList</span>(<span class="code-keyword">items</span>: <span class="code-type">List</span>&lt;<span class="code-type">String</span>&gt;) {
+                        <span class="code-keyword">LazyColumn</span> {
+                            <span class="code-keyword">items</span>(<span class="code-keyword">items</span>) { item ->
+                                <span class="code-keyword">Text</span>(
+                                    <span class="code-keyword">text</span> = item,
+                                    <span class="code-keyword">modifier</span> = <span class="code-type">Modifier</span>
+                                        .<span class="code-function">fillMaxWidth</span>()
+                                        .<span class="code-function">padding</span>(<span class="code-number">16.dp</span>)
+                                )
+                            }
+                        }
+                    }
+                </div>
+            </div>
+        </section>
+
+        <section class="best-practices">
+            <h3>⚙️ Jetpack Compose Best Practices</h3>
+            <div class="practices-list">
+                <div class="practice-item">
+                    <h5>🎯 Design with State Hoisting</h5>
+                    <p>Lift state up to the lowest common ancestor of all Composables that need it, promoting reusability and testability.</p>
+                </div>
+                <div class="practice-item">
+                    <h5>📝 Keep Composables Small & Focused</h5>
+                    <p>Each Composable should ideally do one thing, making them easier to understand, test, and reuse.</p>
+                </div>
+                <div class="practice-item">
+                    <h5>🔄 Use Modifiers Extensively</h5>
+                    <p>Chain Modifiers to apply styling, layout, and behavior to Composables without nesting layouts.</p>
+                </div>
+                <div class="practice-item">
+                    <h5>📊 Optimize Recomposition</h5>
+                    <p>Pass stable types and use `remember` judiciously to minimize unnecessary UI redraws.</p>
+                </div>
+                <div class="practice-item">
+                    <h5>🔍 Leverage Previews</h5>
+                    <p>Use `@Preview` annotations for rapid UI iteration and testing of different states and themes.</p>
+                </div>
+                <div class="practice-item">
+                    <h5>💡 Integrate with MVVM/MVI</h5>
+                    <p>Combine Compose with architectural patterns like MVVM for robust state management and separation of concerns.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="interactive-demo">
+            <h3 style="font-size: 2.2rem; margin-bottom: 20px; color: #7F39FB;">Compose Recomposition Simulation</h3>
+            <p style="margin-bottom: 30px; color: #49454F;">Simulate a simple UI update triggering recomposition</p>
+            
+            <button class="demo-button" onclick="simulateRecomposition()">🔄 Simulate Recomposition</button>
+            
+            <div id="demoOutput" class="demo-output"></div>
+        </section>
+    </div>
+
+    <script>
+        function simulateRecomposition() {
+            const outputDiv = document.getElementById('demoOutput');
+            let steps = [
+                "1. User clicks 'Increment' button.",
+                "2. State variable (e.g., 'count') is updated.",
+                "3. Compose detects state change.",
+                "4. Only affected 'Text' Composable is recomposed (re-executed).",
+                "5. UI updates to 'Count: X' (efficiently, no full redraw).",
+                "✅ Recomposition simulated: UI updated with minimal overhead!"
+            ];
+            let currentStep = 0;
+            outputDiv.textContent = ""; // Clear previous output
+            outputDiv.classList.add('show');
+
+            const interval = setInterval(() => {
+                if (currentStep < steps.length) {
+                    outputDiv.textContent += steps[currentStep] + "\n";
+                    currentStep++;
+                } else {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        outputDiv.classList.remove('show');
+                    }, 2000); // Hide after 2 seconds
+                }
+            }, 1000); // Add a new step every 1 second
+        }
+    </script>
+</body>
+</html>
