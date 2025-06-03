@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coroutines & Flow - KotlinxKyle</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #1C1B1F;
+            background: linear-gradient(135deg, #7F39FB 0%, #6750A4 100%); /* Android theme gradient */
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            padding: 40px 0;
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 2px 2px 4px rgba(0,0,0,0.3), 0 0 20px rgba(255,255,255,0.2); }
+            to { text-shadow: 2px 2px 4px rgba(0,0,0,0.3), 0 0 30px rgba(255,255,255,0.4); }
+        }
+
+        .header h2 {
+            font-size: 1.8rem;
+            font-weight: 300;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .nav-back {
+            display: inline-block;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            font-size: 1.1rem;
+            padding: 10px 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-back:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .overview-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .overview-section h3 {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            color: #7F39FB; /* Kotlin purple */
+            text-align: center;
+        }
+
+        .overview-section p {
+            font-size: 1.2rem;
+            color: #49454F;
+            text-align: center;
+            line-height: 1.8;
+        }
+
+        .coroutines-features, .flow-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            border-top: 5px solid #7F39FB; /* Kotlin purple border */
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(127,57,251,0.1), transparent); /* Lighter Kotlin purple shimmer */
+            transition: left 0.6s ease;
+        }
+
+        .feature-card:hover::before {
+            left: 100%;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+        }
+
+        .feature-card h4 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: #1C1B1F;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .feature-card .icon {
+            font-size: 2.2rem;
+            color: #7F39FB;
+        }
+
+        .feature-card p {
+            color: #49454F;
+            font-size: 1.1rem;
+            line-height: 1.7;
+            text-align: left;
+        }
+
+        .code-snippet {
+            background: #282c34; /* Dark background for code */
+            color: #abb2bf; /* Light text for code */
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            font-size: 0.95rem;
+            overflow-x: auto;
+            margin-top: 15px;
+            line-height: 1.4;
+        }
+
+        .code-keyword { color: #c678dd; } /* Purple */
+        .code-string { color: #98c379; } /* Green */
+        .code-type { color: #e06c75; } /* Red */
+        .code-comment { color: #5c6370; font-style: italic; } /* Gray italic */
+        .code-function { color: #61afef; } /* Blue */
+        .code-number { color: #d19a66; } /* Orange */
+
+        .synergy-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        .synergy-points {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .synergy-item {
+            background: linear-gradient(135deg, #7F39FB 0%, #6750A4 100%); /* Android theme gradient */
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .synergy-item:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(127,57,251,0.3);
+        }
+
+        .synergy-item h5 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .synergy-item p {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        .best-practices {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        .best-practices h3 {
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            color: #7F39FB;
+        }
+
+        .practices-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .practice-item {
+            background: rgba(127,57,251,0.1); /* Lighter Kotlin purple background */
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 5px solid #7F39FB; /* Kotlin purple border */
+            transition: all 0.3s ease;
+        }
+
+        .practice-item:hover {
+            background: rgba(127,57,251,0.15);
+            transform: translateX(5px);
+        }
+
+        .practice-item h5 {
+            color: #7F39FB;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+
+        .practice-item p {
+            color: #49454F;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .interactive-demo {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .demo-button {
+            background: linear-gradient(135deg, #7F39FB 0%, #6750A4 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+        }
+
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(127,57,251,0.3);
+        }
+
+        .demo-output {
+            background: #282c34;
+            color: #abb2bf;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            text-align: left;
+            font-size: 0.95rem;
+            white-space: pre-wrap;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.5s ease;
+        }
+
+        .demo-output.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            .coroutines-features, .flow-features, .synergy-points, .practices-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Coroutines & Flow</h1>
+            <h2>Modern Asynchronous & Reactive Programming</h2>
+            <a href="index.html" class="nav-back">← Back to Portfolio</a>
+        </header>
+
+        <section class="overview-section">
+            <h3>⚡ Simplifying Concurrency for Responsive Apps</h3>
+            <p>Kotlin Coroutines and Flow are powerful tools that revolutionize asynchronous programming and reactive data streams in Android. They offer a concise, readable, and safe way to handle long-running operations and continuous data updates, ensuring a fluid and responsive user experience without blocking the main thread.</p>
+        </section>
+
+        <section class="coroutines-features">
+            <h3 style="text-align: center; font-size: 2.2rem; margin-bottom: 20px; color: #7F39FB;">Kotlin Coroutines: Lightweight Concurrency</h3>
+            <p style="text-align: center; margin-bottom: 30px; color: #49454F;">Structured, non-blocking asynchronous programming</p>
+            
+            <div class="feature-card">
+                <h4><span class="icon">💡</span> Suspending Functions</h4>
+                <p>Functions that can be paused and resumed at a later time, enabling sequential-looking code for asynchronous operations.</p>
+                <div class="code-snippet">
+                    <span class="code-keyword">suspend fun</span> <span class="code-function">fetchUserData</span>(): <span class="code-type">User</span> {
+                        <span class="code-keyword">delay</span>(<span class="code-number">1000L</span>) <span class="code-comment">// Simulate network delay</span>
+                        <span class="code-keyword">return</span> <span class="code-type">User</span>(<span class="code-string">"Alice"</span>, <span class="code-number">30</span>)
+                    }
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <h4><span class="icon">🔗</span> CoroutineScope & Context</h4>
+                <p>Manages the lifecycle of coroutines, ensuring they are cancelled when the associated component is destroyed, preventing leaks.</p>
+                <div class="code-snippet">
+                    <span class="code-keyword">class</span> <span class="code-type">MyViewModel</span>: <span class="code-type">ViewModel</span>() {
+                        <span class="code-keyword">val</span> <span class="code-keyword">scope</span> = <span class="code-type">viewModelScope</span> <span class="code-comment">// Tied to ViewModel's lifecycle</span>
+
+                        <span class="code-keyword">fun</span> <span class="code-function">loadData</span>() {
+                            <span class="code-keyword">scope</span>.<span class="code-function">launch</span> {
+                                <span class="code-type">val</span> user = <span class="code-function">fetchUserData</span>()
+                                <span class="code-comment">// Update LiveData/UI State</span>
+                            }
+                        }
+                    }
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <h4><span class="icon">🚦</span> Dispatchers</h4>
+                <p>Determines which thread or thread pool the coroutine will use for its execution (Main, IO, Default).</p>
+                <div class="code-snippet">
+                    <span class="code-keyword">suspend fun</span> <span class="code-function">performBackgroundWork</span>() =
+                        <span class="code-keyword">withContext</span>(<span class="code-keyword">Dispatchers</span>.IO) {
+                            <span class="code-comment">// Network or database operation here</span>
+                        }
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <h4><span class="icon">✅</span> Structured Concurrency</h4>
+                <p>Ensures that coroutines are organized in a parent-child hierarchy, simplifying error handling and cancellation propagation.</p>
+                <div class="code-snippet">
+                    <span class="code-comment">// A coroutine launched within a scope is its child.</span>
+                    <span class="code-comment">// Cancelling parent cancels all children.</span>
+                    <span class="code-keyword">val</span> job = <span class="code-keyword">scope</span>.<span class="code-function">launch</span> {
+                        <span class="code-function">doSomeWork</span>()
+                    }
+                    <span class="code-comment">// job.cancel() would cancel the launched coroutine.</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="flow-features">
+            <h3 style="text-align: center; font-size: 2.2rem; margin-bottom: 20px; color: #7F39FB;">Kotlin Flow: Reactive Data Streams</h3>
+            <p style="text-align: center; margin-bottom: 30px; color: #49454F;">Asynchronous stream processing with backpressure support</p>
+            
+            <div class="feature-card">
+                <h4><span class="icon">💧</span> Cold Streams</h4>
+                <p>Flows are cold, meaning the producer block runs only when a collector starts collecting from the Flow, ensuring efficiency.</p>
+                <div class="code-snippet">
+                    <span class="code-keyword">fun</span> <span class="code-function">getNumbers</span>(): <span class="code-type">Flow</span>&lt;<span class="code-type">Int</span>&gt; = <span class="code-keyword">flow</span> {
+                        <span class="code-keyword">for</span> (<span class="code-keyword">i</span> <span class="code-keyword">in</span> <span class="code-number">1</span>..<span class="code-number">3</span>) {
+                            <span class="code-keyword">delay</span>(<span class="code-number">100L</span>)
+                            <span class="code-function">emit</span>(<span class="code-keyword">i</span>)
+                        }
+                    }
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <h4><span class="icon">↔️</span> Operators</h4>
+                <p>Provides a rich set of operators (like `map`, `filter`, `debounce`, `combine`) to transform and combine data streams.</p>
+                <div class="code-snippet">
+                    <span class="code-keyword">val</span> filteredFlow = <span class="code-function">getNumbers</span>()
+                        .<span class="code-function">filter</span> { it % <span class="code-number">2</span> == <span class="code-number">0</span> } <span class="code-comment">// Filter for even numbers</span>
+                        .<span class="code-function">map</span> { <span class="code-string">"Number: $it"</span> } <span class="code-comment">// Transform to string</span>
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <h4><span class="icon">📥</span> Collectors</h4>
+                <p>Consumes the emitted values from a Flow. `collect` is the terminal operator that starts the flow's execution.</p>
+                <div class="code-snippet">
+                    <span class="code-keyword">scope</span>.<span class="code-function">launch</span> {
+                        filteredFlow.<span class="code-function">collect</span> { value ->
+                            <span class="code-keyword">println</span>(value) <span class="code-comment">// Prints "Number: 2"</span>
+                        }
+                    }
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <h4><span class="icon">🧘‍♀️</span> Backpressure Handling</h4>
+                <p>Flow is designed to handle backpressure by default, ensuring that the producer doesn't overwhelm the consumer.</p>
+                <div class="code-snippet">
+                    <span class="code-comment">// Flow's design naturally handles cases where consumer is slower</span>
+                    <span class="code-comment">// than producer, preventing memory issues or data loss.</span>
+                    <span class="code-keyword">val</span> bufferFlow = <span class="code-function">heavyProducerFlow</span>().<span class="code-function">buffer</span>()
+                    <span class="code-comment">// 'buffer' operator explicitly controls buffering strategy.</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="synergy-section">
+            <h3 style="text-align: center; font-size: 2.2rem; margin-bottom: 20px; color: #7F39FB;">Synergy: Coroutines & Flow in Android</h3>
+            <p style="text-align: center; margin-bottom: 30px; color: #49454F;">The powerful combination for building responsive and data-driven apps</p>
+            
+            <div class="synergy-points">
+                <div class="synergy-item">
+                    <h5>API Calls</h5>
+                    <p>Coroutines simplify network requests from Retrofit by making them `suspend` functions, easy to call.</p>
+                </div>
+                <div class="synergy-item">
+                    <h5>Database Operations</h5>
+                    <p>Room DAOs can expose data as `Flow` for reactive updates or use `suspend` for one-shot operations.</p>
+                </div>
+                <div class="synergy-item">
+                    <h5>UI Updates</h5>
+                    <p>Flow can be collected within a CoroutineScope (e.g., `lifecycleScope`, `viewModelScope`) to update UI safely.</p>
+                </div>
+                <div class="synergy-item">
+                    <h5>Background Tasks</h5>
+                    <p>Coroutines enable safe execution of long-running tasks on background threads using `Dispatchers.IO`.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="best-practices">
+            <h3>⚙️ Coroutines & Flow Best Practices</h3>
+            <div class="practices-list">
+                <div class="practice-item">
+                    <h5>🎯 Use Structured Concurrency</h5>
+                    <p>Always launch coroutines within a `CoroutineScope` (e.g., `viewModelScope`, `lifecycleScope`) to manage their lifecycle.</p>
+                </div>
+                <div class="practice-item">
+                    <h5>📝 Define Dispatchers Explicitly</h5>
+                    <p>Use `Dispatchers.Main` for UI updates, `Dispatchers.IO` for network/disk, and `Dispatchers.Default` for CPU-bound tasks.</p>
+                </div>
+                <div class="practice-item">
+                    <h5>🔄 Handle Exceptions Gracefully</h5>
+                    <p>Implement `try-catch` blocks or `CoroutineExceptionHandler` for robust error handling in coroutines.</p>
+                </div>
+                <div class="practice-item">
+                    <h5>📊 Avoid `GlobalScope`</h5>
+                    <p>Using `GlobalScope` can lead to unmanaged coroutines and memory leaks; prefer structured scopes.</p>
+                </div>
+                <div class="practice-item">
+                    <h5>🔍 Use `Flow` for Continuous Streams</h5>
+                    <p>Employ `Flow` for data that changes over time (e.g., database updates, real-time events).</p>
+                </div>
+                <div class="practice-item">
+                    <h5>💡 Collect Flows in Lifecycle-Aware Way</h5>
+                    <p>Use `repeatOnLifecycle` or `flowWithLifecycle` for safe collection of Flows in Android UI components.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="interactive-demo">
+            <h3 style="font-size: 2.2rem; margin-bottom: 20px; color: #7F39FB;">Coroutine & Flow Simulation</h3>
+            <p style="margin-bottom: 30px; color: #49454F;">Simulate an asynchronous data fetch and UI update using Coroutines and Flow</p>
+            
+            <button class="demo-button" onclick="simulateCoroutinesFlow()">▶️ Run Simulation</button>
+            
+            <div id="demoOutput" class="demo-output"></div>
+        </section>
+    </div>
+
+    <script>
+        function simulateCoroutinesFlow() {
+            const outputDiv = document.getElementById('demoOutput');
+            let steps = [
+                "1. User initiates data refresh in UI.",
+                "2. Coroutine launched in ViewModelScope.",
+                "3. Suspending function calls API (on Dispatchers.IO)...",
+                "4. (Simulated network delay: 1000ms)",
+                "5. Data received: 'Latest Weather: Sunny, 25°C'",
+                "6. Emitting data to Flow...",
+                "7. Flow collected on Dispatchers.Main.",
+                "8. UI updated with new weather data.",
+                "✅ Simulation complete. UI is responsive!"
+            ];
+            let currentStep = 0;
+            outputDiv.textContent = ""; // Clear previous output
+            outputDiv.classList.add('show');
+
+            const interval = setInterval(() => {
+                if (currentStep < steps.length) {
+                    outputDiv.textContent += steps[currentStep] + "\n";
+                    currentStep++;
+                } else {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        outputDiv.classList.remove('show');
+                    }, 2000); // Hide after 2 seconds
+                }
+            }, 1000); // Add a new step every 1 second
+        }
+    </script>
+</body>
+</html>
