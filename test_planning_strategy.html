@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Planning & Strategy - KotlinxKyle</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #1C1B1F;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            padding: 40px 0;
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 2px 2px 4px rgba(0,0,0,0.3), 0 0 20px rgba(255,255,255,0.2); }
+            to { text-shadow: 2px 2px 4px rgba(0,0,0,0.3), 0 0 30px rgba(255,255,255,0.4); }
+        }
+
+        .header h2 {
+            font-size: 1.8rem;
+            font-weight: 300;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .nav-back {
+            display: inline-block;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            font-size: 1.1rem;
+            padding: 10px 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-back:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .overview-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .overview-section h3 {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            color: #667eea;
+            text-align: center;
+        }
+
+        .overview-section p {
+            font-size: 1.2rem;
+            color: #49454F;
+            text-align: center;
+            line-height: 1.8;
+        }
+
+        .planning-elements {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .element-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            border-top: 5px solid;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .element-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(102,126,234,0.1), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .element-card:hover::before {
+            left: 100%;
+        }
+
+        .element-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+        }
+
+        .element-card:nth-child(1) { border-top-color: #f9ca24; } /* Scope */
+        .element-card:nth-child(2) { border-top-color: #4ecdc4; } /* Objectives */
+        .element-card:nth-child(3) { border-top-color: #ff6b6b; } /* Resources */
+        .element-card:nth-child(4) { border-top-color: #3742fa; } /* Schedule */
+        .element-card:nth-child(5) { border-top-color: #ffa502; } /* Environment */
+        .element-card:nth-child(6) { border-top-color: #2ed573; } /* Exit Criteria */
+
+        .element-card h4 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #1C1B1F;
+            text-align: center;
+        }
+
+        .element-card p {
+            color: #49454F;
+            font-size: 1rem;
+            line-height: 1.6;
+            text-align: center;
+        }
+
+        .strategic-approaches {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        .approach-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .approach-item {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .approach-item:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(102,126,234,0.3);
+        }
+
+        .approach-item h5 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .approach-item p {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        .best-practices {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        .best-practices h3 {
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            color: #667eea;
+        }
+
+        .practices-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .practice-item {
+            background: rgba(102,126,234,0.1);
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 5px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .practice-item:hover {
+            background: rgba(102,126,234,0.15);
+            transform: translateX(5px);
+        }
+
+        .practice-item h5 {
+            color: #667eea;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+
+        .practice-item p {
+            color: #49454F;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .interactive-demo {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .demo-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+        }
+
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102,126,234,0.3);
+        }
+
+        .test-result {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.5s ease;
+        }
+
+        .test-result.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .test-result.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .test-result.challenge {
+            background: #fff3cd;
+            color: #664d03;
+            border: 1px solid #ffecb5;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            .planning-elements, .approach-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Test Planning & Strategy</h1>
+            <h2>Building a Roadmap for Quality</h2>
+            <a href="index.html" class="nav-back">← Back to Portfolio</a>
+        </header>
+
+        <section class="overview-section">
+            <h3>🗺️ Navigating the Path to Quality</h3>
+            <p>Effective test planning and strategy are the blueprints for a successful testing effort. They define the scope, objectives, resources, and approach, ensuring that testing is systematic, efficient, and aligned with overall project goals. A well-laid plan anticipates challenges and paves the way for a high-quality product.</p>
+        </section>
+
+        <section class="strategic-approaches">
+            <h3 style="text-align: center; font-size: 2.2rem; margin-bottom: 20px; color: #667eea;">Strategic Testing Approaches</h3>
+            <p style="text-align: center; margin-bottom: 30px; color: #49454F;">Tailoring the testing strategy to meet specific project needs</p>
+            
+            <div class="approach-grid">
+                <div class="approach-item">
+                    <h5>📈 Risk-Based Testing</h5>
+                    <p>Prioritizing testing efforts based on the potential impact and likelihood of defects.</p>
+                </div>
+                <div class="approach-item">
+                    <h5>🧪 Test Levels Integration</h5>
+                    <p>Coordinating unit, integration, system, and acceptance testing for seamless coverage.</p>
+                </div>
+                <div class="approach-item">
+                    <h5>🤖 Automation Strategy</h5>
+                    <p>Defining which tests to automate, tool selection, and integration with CI/CD.</p>
+                </div>
+                <div class="approach-item">
+                    <h5>📊 Performance & Security Focus</h5>
+                    <p>Incorporating specialized testing early in the lifecycle to catch critical issues.</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="planning-elements">
+            <div class="element-card">
+                <h4>Scope & Objectives</h4>
+                <p>Clearly defining what will and will not be tested, and the goals of the testing effort.</p>
+            </div>
+            <div class="element-card">
+                <h4>Resources & Roles</h4>
+                <p>Identifying required personnel, tools, and their responsibilities within the testing process.</p>
+            </div>
+            <div class="element-card">
+                <h4>Schedule & Milestones</h4>
+                <p>Establishing a realistic timeline for testing activities and key delivery points.</p>
+            </div>
+            <div class="element-card">
+                <h4>Test Environments</h4>
+                <p>Setting up and managing the necessary hardware, software, and data for testing.</p>
+            </div>
+            <div class="element-card">
+                <h4>Entry & Exit Criteria</h4>
+                <p>Defining when testing can start, what constitutes completion, and readiness for next phases.</p>
+            </div>
+            <div class="element-card">
+                <h4>Risks & Contingencies</h4>
+                <p>Identifying potential testing risks and outlining mitigation strategies.</p>
+            </div>
+        </div>
+
+        <section class="best-practices">
+            <h3>⚙️ Best Practices in Test Planning</h3>
+            <div class="practices-list">
+                <div class="practice-item">
+                    <h5>🎯 Align with Business Goals</h5>
+                    <p>Ensure the testing strategy directly supports overall business objectives and product vision.</p>
+                </div>
+                <div class="practice-item">
+                    <h5>📝 Collaborate with Stakeholders</h5>
+                    <p>Involve developers, product owners, and business analysts in planning discussions.</p>
+                </div>
+                <div class="practice-item">
+                    <h5>🔄 Keep it Agile & Adaptable</h5>
+                    <p>Test plans should be living documents, ready to adapt to changing requirements and priorities.</p>
+                </div>
+                <div class="practice-item">
+                    <h5>📊 Measure & Report Progress</h5>
+                    <p>Define clear metrics for tracking testing progress, coverage, and defect rates.</p>
+                </div>
+                <div class="practice-item">
+                    <h5>🔍 Prioritize Based on Risk</h5>
+                    <p>Focus testing efforts on critical functionalities and high-risk areas first.</p>
+                </div>
+                <div class="practice-item">
+                    <h5>💡 Leverage Automation Early</h5>
+                    <p>Integrate automation into the planning from the outset to maximize efficiency.</p>
+                </div>
+                <div class="practice-item">
+                    <h5>🛠️ Define Clear Roles & Responsibilities</h5>
+                    <p>Everyone involved should understand their part in the testing process.</p>
+                </div>
+                <div class="practice-item">
+                    <h5>🗣️ Communicate Thoroughly</h5>
+                    <p>Ensure the test plan is communicated and understood by all relevant teams.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="interactive-demo">
+            <h3 style="font-size: 2.2rem; margin-bottom: 20px; color: #667eea;">Planning Outcome Simulation</h3>
+            <p style="margin-bottom: 30px; color: #49454F;">Simulate the outcome of a planned testing phase</p>
+            
+            <button class="demo-button" onclick="runPlanningSimulation()">✨ Initiate Testing Phase</button>
+            
+            <div id="testResult" class="test-result"></div>
+        </section>
+    </div>
+
+    <script>
+        function runPlanningSimulation() {
+            const resultDiv = document.getElementById('testResult');
+            const outcomes = [
+                { status: "success", message: "✅ Test Phase Success: Executed 95% of planned test cases, found 0 critical defects." },
+                { status: "challenge", message: "⚠️ Test Phase Challenge: Found unexpected environment issues, planning adjustments needed." },
+                { status: "success", message: "✅ Test Phase Success: On schedule, high coverage achieved, minimal blockers." },
+                { status: "challenge", message: "⚠️ Test Phase Challenge: Scope creep detected, requires re-evaluation of test strategy." }
+            ];
+            
+            const randomOutcome = outcomes[Math.floor(Math.random() * outcomes.length)];
+            
+            resultDiv.className = `test-result ${randomOutcome.status} show`;
+            resultDiv.textContent = randomOutcome.message;
+            
+            setTimeout(() => {
+                resultDiv.classList.remove('show');
+            }, 4000);
+        }
+    </script>
+</body>
+</html>
