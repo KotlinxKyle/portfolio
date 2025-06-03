@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Android SDK & Android Studio - KotlinxKyle</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #1C1B1F;
+            background: linear-gradient(135deg, #7F39FB 0%, #6750A4 100%); /* Android theme gradient */
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            padding: 40px 0;
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 2px 2px 4px rgba(0,0,0,0.3), 0 0 20px rgba(255,255,255,0.2); }
+            to { text-shadow: 2px 2px 4px rgba(0,0,0,0.3), 0 0 30px rgba(255,255,255,0.4); }
+        }
+
+        .header h2 {
+            font-size: 1.8rem;
+            font-weight: 300;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .nav-back {
+            display: inline-block;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            font-size: 1.1rem;
+            padding: 10px 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-back:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .overview-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .overview-section h3 {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            color: #7F39FB; /* Kotlin purple */
+            text-align: center;
+        }
+
+        .overview-section p {
+            font-size: 1.2rem;
+            color: #49454F;
+            text-align: center;
+            line-height: 1.8;
+        }
+
+        .sdk-components, .studio-features {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        .components-grid, .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .component-item, .feature-item {
+            background: linear-gradient(135deg, #7F39FB 0%, #6750A4 100%); /* Android theme gradient */
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .component-item:hover, .feature-item:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(127,57,251,0.3);
+        }
+
+        .component-item h5, .feature-item h5 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .component-item p, .feature-item p {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+        .component-item .icon, .feature-item .icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .workflow-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        .workflow-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .workflow-step {
+            background: rgba(127,57,251,0.1); /* Lighter Android purple */
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 5px solid #7F39FB;
+            transition: all 0.3s ease;
+        }
+
+        .workflow-step:hover {
+            background: rgba(127,57,251,0.15);
+            transform: translateX(5px);
+        }
+
+        .workflow-step h4 {
+            color: #7F39FB;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .best-practices {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        .best-practices h3 {
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            color: #7F39FB;
+        }
+
+        .practices-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .practice-item {
+            background: rgba(127,57,251,0.1); /* Lighter Kotlin purple background */
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 5px solid #7F39FB; /* Kotlin purple border */
+            transition: all 0.3s ease;
+        }
+
+        .practice-item:hover {
+            background: rgba(127,57,251,0.15);
+            transform: translateX(5px);
+        }
+
+        .practice-item h5 {
+            color: #7F39FB;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+
+        .practice-item p {
+            color: #49454F;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .interactive-demo {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .demo-button {
+            background: linear-gradient(135deg, #7F39FB 0%, #6750A4 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+        }
+
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(127,57,251,0.3);
+        }
+
+        .demo-output {
+            background: #282c34;
+            color: #abb2bf;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            text-align: left;
+            font-size: 1rem;
+            white-space: pre-wrap;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.5s ease;
+        }
+
+        .demo-output.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            .components-grid, .features-grid, .workflow-steps, .practices-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Android SDK & Android Studio</h1>
+            <h2>Your Power Tools for Android Development</h2>
+            <a href="index.html" class="nav-back">← Back to Portfolio</a>
+        </header>
+
+        <section class="overview-section">
+            <h3>🛠️ The Core of Android Development</h3>
+            <p>Mastering Android SDK and Android Studio is fundamental to building high-quality Android applications. These indispensable tools provide a complete ecosystem for designing, developing, debugging, and deploying apps, ensuring a seamless and efficient development workflow from concept to launch.</p>
+        </section>
+
+        <section class="sdk-components">
+            <h3 style="text-align: center; font-size: 2.2rem; margin-bottom: 20px; color: #7F39FB;">Android SDK: The Building Blocks</h3>
+            <p style="text-align: center; margin-bottom: 30px; color: #49454F;">A suite of development tools, libraries, and documentation</p>
+            
+            <div class="components-grid">
+                <div class="component-item">
+                    <div class="icon">💻</div>
+                    <h5>SDK Tools</h5>
+                    <p>Core tools like `adb` (Android Debug Bridge), ProGuard, and various utilities for app development.</p>
+                </div>
+                <div class="component-item">
+                    <div class="icon">⚙️</div>
+                    <h5>Platform Tools</h5>
+                    <p>Essential command-line tools such as `adb`, `fastboot`, and `systrace` that interface with Android devices.</p>
+                </div>
+                <div class="component-item">
+                    <div class="icon">🏗️</div>
+                    <h5>Build Tools</h5>
+                    <p>Components required to build Android applications, including D8 (desugaring), R8 (code shrinking), and AAPT (Android Asset Packaging Tool).</p>
+                </div>
+                <div class="component-item">
+                    <div class="icon">🖼️</div>
+                    <h5>SDK Platforms</h5>
+                    <p>API libraries specific to each Android version (e.g., API 34 for Android 14), allowing apps to target different OS levels.</p>
+                </div>
+                <div class="component-item">
+                    <div class="icon">📱</div>
+                    <h5>System Images</h5>
+                    <p>Operating system images for various Android versions and device types, used by the Android Emulator.</p>
+                </div>
+                <div class="component-item">
+                    <div class="icon">🌐</div>
+                    <h5>Android Emulator</h5>
+                    <p>A virtual device that runs on your computer, allowing you to test your Android applications without a physical device.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="studio-features">
+            <h3 style="text-align: center; font-size: 2.2rem; margin-bottom: 20px; color: #7F39FB;">Android Studio: The Integrated Development Environment</h3>
+            <p style="text-align: center; margin-bottom: 30px; color: #49454F;">A powerful, intelligent IDE built specifically for Android</p>
+            
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="icon">📝</div>
+                    <h5>Intelligent Code Editor</h5>
+                    <p>Syntax highlighting, code completion, refactoring tools, and static analysis for Java, Kotlin, and XML.</p>
+                </div>
+                <div class="feature-item">
+                    <div class="icon">🎨</div>
+                    <h5>Visual Layout Editor</h5>
+                    <p>Drag-and-drop interface for designing complex UI layouts, with real-time preview on various screen sizes.</p>
+                </div>
+                <div class="feature-item">
+                    <div class="icon">🐛</div>
+                    <h5>Powerful Debugger</h5>
+                    <p>Set breakpoints, inspect variables, evaluate expressions, and step through code to identify and fix issues.</p>
+                </div>
+                <div class="feature-item">
+                    <div class="icon">🚀</div>
+                    <h5>Performance Profilers</h5>
+                    <p>Monitor CPU, memory, network, and battery usage to identify bottlenecks and optimize app performance.</p>
+                </div>
+                <div class="feature-item">
+                    <div class="icon">📦</div>
+                    <h5>Gradle Build System</h5>
+                    <p>Robust and flexible build system integrated for managing dependencies, build variants, and app signing.</p>
+                </div>
+                <div class="feature-item">
+                    <div class="icon">🗄️</div>
+                    <h5>Database Inspector</h5>
+                    <p>View, query, and modify app databases (SQLite, Room) directly within the IDE during debugging.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="workflow-section">
+            <h3 style="text-align: center; font-size: 2.2rem; margin-bottom: 20px; color: #7F39FB;">Seamless Development Workflow</h3>
+            <p style="text-align: center; margin-bottom: 30px; color: #49454F;">How SDK and Studio work in harmony</p>
+            
+            <div class="workflow-steps">
+                <div class="workflow-step">
+                    <h4>1. Code & Design</h4>
+                    <p>Write Kotlin/Java code and design UI layouts in Android Studio's intelligent editor and visual designer.</p>
+                </div>
+                <div class="workflow-step">
+                    <h4>2. Build & Compile</h4>
+                    <p>Gradle (part of SDK) compiles code, resources, and assets into an APK/AAB for installation.</p>
+                </div>
+                <div class="workflow-step">
+                    <h4>3. Deploy & Test</h4>
+                    <p>Deploy to an Android Emulator (SDK component) or a physical device for comprehensive testing.</p>
+                </div>
+                <div class="workflow-step">
+                    <h4>4. Debug & Profile</h4>
+                    <p>Use Android Studio's debugger and profilers to identify and resolve performance or functional issues.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="best-practices">
+            <h3>⚙️ Best Practices for SDK & Studio Usage</h3>
+            <div class="practices-list">
+                <div class="practice-item">
+                    <h5>🎯 Keep SDK Tools Updated</h5>
+                    <p>Regularly update SDK tools, platform tools, and build tools for the latest features and bug fixes.</p>
+                </div>
+                <div class="practice-item">
+                    <h5>📝 Master Keyboard Shortcuts</h5>
+                    <p>Learn and utilize Android Studio's shortcuts to significantly boost productivity.</p>
+                </div>
+                <div class="practice-item">
+                    <h5>🔄 Configure Emulator Properly</h5>
+                    <p>Create diverse AVDs (Android Virtual Devices) to test on various screen sizes and Android versions.</p>
+                </div>
+                <div class="practice-item">
+                    <h5>📊 Utilize Profilers Routinely</h5>
+                    <p>Integrate profiling into your development cycle to prevent performance bottlenecks early on.</p>
+                </div>
+                <div class="practice-item">
+                    <h5>🔍 Understand Gradle</h5>
+                    <p>Gain a solid understanding of Gradle build scripts for efficient project configuration and dependency management.</p>
+                </div>
+                <div class="practice-item">
+                    <h5>💡 Use Live Previews & Lint</h5>
+                    <p>Leverage the Layout Editor's live previews and run Lint checks regularly for UI and code quality.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="interactive-demo">
+            <h3 style="font-size: 2.2rem; margin-bottom: 20px; color: #7F39FB;">Android Studio Feature Simulation</h3>
+            <p style="margin-bottom: 30px; color: #49454F;">Experience a quick simulation of a key Android Studio feature</p>
+            
+            <button class="demo-button" onclick="runStudioDemo('layout')">🎨 Simulate Layout Preview</button>
+            <button class="demo-button" onclick="runStudioDemo('debug')">🐛 Simulate Debug Session</button>
+            
+            <div id="demoOutput" class="demo-output"></div>
+        </section>
+    </div>
+
+    <script>
+        function runStudioDemo(type) {
+            const outputDiv = document.getElementById('demoOutput');
+            let message = '';
+
+            if (type === 'layout') {
+                message = `
+Simulating Layout Preview:
+--------------------------
+⏳ Loading layout XML...
+✅ Rendered on Pixel 8 Pro (API 34)
+✅ Rendered on Foldable (API 33)
+✅ Applied Dark Theme variant
+All previews rendered successfully in 350ms.
+No layout warnings or errors detected.
+                `;
+            } else if (type === 'debug') {
+                message = `
+Simulating Debug Session:
+-------------------------
+▶️ Starting debugger...
+✅ Connected to process 'com.kotlinx.kyle.myapp' on Pixel 6 API 33
+Breakpoint hit at MainActivity.kt:42: user.login()
+Variables:
+  - user: User(id=1, username="test_user")
+  - password: "secure_password"
+Stepping over... Function call to API successful.
+Continuing execution...
+                `;
+            }
+            
+            outputDiv.textContent = message;
+            outputDiv.classList.add('show');
+
+            setTimeout(() => {
+                outputDiv.classList.remove('show');
+            }, 6000); // Hide after 6 seconds
+        }
+    </script>
+</body>
+</html>
