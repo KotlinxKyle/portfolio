@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REST API Integration - KotlinxKyle</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #1C1B1F;
+            background: linear-gradient(135deg, #7F39FB 0%, #6750A4 100%); /* Android theme gradient */
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            padding: 40px 0;
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 2px 2px 4px rgba(0,0,0,0.3), 0 0 20px rgba(255,255,255,0.2); }
+            to { text-shadow: 2px 2px 4px rgba(0,0,0,0.3), 0 0 30px rgba(255,255,255,0.4); }
+        }
+
+        .header h2 {
+            font-size: 1.8rem;
+            font-weight: 300;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .nav-back {
+            display: inline-block;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            font-size: 1.1rem;
+            padding: 10px 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-back:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .overview-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .overview-section h3 {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            color: #7F39FB; /* Kotlin purple */
+            text-align: center;
+        }
+
+        .overview-section p {
+            font-size: 1.2rem;
+            color: #49454F;
+            text-align: center;
+            line-height: 1.8;
+        }
+
+        .rest-principles {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .principle-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            border-top: 5px solid #7F39FB; /* Kotlin purple border */
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .principle-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(127,57,251,0.1), transparent); /* Lighter Kotlin purple shimmer */
+            transition: left 0.6s ease;
+        }
+
+        .principle-card:hover::before {
+            left: 100%;
+        }
+
+        .principle-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+        }
+
+        .principle-card h4 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: #1C1B1F;
+            text-align: center;
+        }
+
+        .principle-card p {
+            color: #49454F;
+            font-size: 1.1rem;
+            line-height: 1.7;
+            text-align: center;
+        }
+
+        .integration-libraries, .data-handling {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        .library-grid, .handling-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .library-item, .handling-item {
+            background: linear-gradient(135deg, #7F39FB 0%, #6750A4 100%); /* Android theme gradient */
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .library-item:hover, .handling-item:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(127,57,251,0.3);
+        }
+
+        .library-item h5, .handling-item h5 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .library-item p, .handling-item p {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        .best-practices {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        .best-practices h3 {
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            color: #7F39FB;
+        }
+
+        .practices-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .practice-item {
+            background: rgba(127,57,251,0.1); /* Lighter Kotlin purple background */
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 5px solid #7F39FB; /* Kotlin purple border */
+            transition: all 0.3s ease;
+        }
+
+        .practice-item:hover {
+            background: rgba(127,57,251,0.15);
+            transform: translateX(5px);
+        }
+
+        .practice-item h5 {
+            color: #7F39FB;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+
+        .practice-item p {
+            color: #49454F;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .interactive-demo {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .demo-button {
+            background: linear-gradient(135deg, #7F39FB 0%, #6750A4 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+        }
+
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(127,57,251,0.3);
+        }
+
+        .demo-output {
+            background: #282c34;
+            color: #abb2bf;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            text-align: left;
+            font-size: 0.95rem;
+            white-space: pre-wrap;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.5s ease;
+        }
+
+        .demo-output.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            .rest-principles, .library-grid, .handling-grid, .practices-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>REST API Integration</h1>
+            <h2>Seamlessly Connecting Android Apps to Backend Services</h2>
+            <a href="index.html" class="nav-back">← Back to Portfolio</a>
+        </header>
+
+        <section class="overview-section">
+            <h3>🌐 The Backbone of Connected Apps</h3>
+            <p>Modern Android applications are rarely standalone; they thrive on interaction with backend services to fetch and store data, authenticate users, and provide dynamic content. My expertise in REST API integration ensures that Android apps can communicate efficiently and reliably with any web service, forming the crucial bridge between frontend and backend.</p>
+        </section>
+
+        <div class="rest-principles">
+            <div class="principle-card">
+                <h4>Resources</h4>
+                <p>Everything is a resource, uniquely identified by a URI (Uniform Resource Identifier), allowing for clear data representation.</p>
+            </div>
+            <div class="principle-card">
+                <h4>HTTP Methods</h4>
+                <p>Standard HTTP verbs (GET, POST, PUT, DELETE) are used to perform CRUD operations on resources, ensuring a uniform interface.</p>
+            </div>
+            <div class="principle-card">
+                <h4>Statelessness</h4>
+                <p>Each request from client to server contains all necessary information, with no session state stored on the server side.</p>
+            </div>
+            <div class="principle-card">
+                <h4>Uniform Interface</h4>
+                <p>Simplifies interactions by applying a consistent way of interacting with resources, regardless of their implementation.</p>
+            </div>
+        </div>
+
+        <section class="integration-libraries">
+            <h3 style="text-align: center; font-size: 2.2rem; margin-bottom: 20px; color: #7F39FB;">Android Integration Libraries</h3>
+            <p style="text-align: center; margin-bottom: 30px; color: #49454F;">Leveraging powerful tools for efficient network operations</p>
+            
+            <div class="library-grid">
+                <div class="library-item">
+                    <h5>Retrofit</h5>
+                    <p>A type-safe HTTP client for Android and Java. It simplifies the process of making API calls by turning HTTP API into Java/Kotlin interfaces.</p>
+                </div>
+                <div class="library-item">
+                    <h5>OkHttp</h5>
+                    <p>An efficient HTTP client that handles network requests. Retrofit uses OkHttp for its underlying network operations, providing robust and performant connectivity.</p>
+                </div>
+                <div class="library-item">
+                    <h5>GSON / Moshi</h5>
+                    <p>JSON serialization/deserialization libraries. They convert JSON responses into Kotlin/Java objects and vice-versa, making data handling intuitive.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="data-handling">
+            <h3 style="text-align: center; font-size: 2.2rem; margin-bottom: 20px; color: #7F39FB;">Managing API Responses & States</h3>
+            <p style="text-align: center; margin-bottom: 30px; color: #49454F;">Ensuring a smooth user experience through robust data handling</p>
+            
+            <div class="handling-grid">
+                <div class="handling-item">
+                    <h5>Loading States</h5>
+                    <p>Displaying UI indicators (spinners, skeletons) while data is being fetched, providing visual feedback to users.</p>
+                </div>
+                <div class="handling-item">
+                    <h5>Success Responses</h5>
+                    <p>Parsing and displaying fetched data, updating UI elements, and handling successful operations.</p>
+                </div>
+                <div class="handling-item">
+                    <h5>Error Handling</h5>
+                    <p>Gracefully managing network errors, API errors, and invalid responses (e.g., displaying error messages, retries).</p>
+                </div>
+                <div class="handling-item">
+                    <h5>Authentication</h5>
+                    <p>Implementing secure user authentication flows (e.g., OAuth 2.0, JWTs) to protect API access.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="best-practices">
+            <h3>⚙️ REST API Integration Best Practices</h3>
+            <div class="practices-list">
+                <div class="practice-item">
+                    <h5>🎯 Use a Repository Pattern</h5>
+                    <p>Abstract data sources (network, database) behind a clean API for ViewModels, promoting separation of concerns.</p>
+                </div>
+                <div class="practice-item">
+                    <h5>📝 Implement Error Handling Early</h5>
+                    <p>Design a comprehensive error handling strategy for network failures, API errors, and invalid data.</p>
+                </div>
+                <div class="practice-item">
+                    <h5>🔄 Leverage Coroutines for Async</h5>
+                    <p>Use Kotlin Coroutines with Retrofit for concise, non-blocking asynchronous network requests.</p>
+                </div>
+                <div class="practice-item">
+                    <h5>📊 Optimize Network Calls</h5>
+                    <p>Minimize unnecessary requests, use caching, and paginate large datasets to improve performance.</p>
+                </div>
+                <div class="practice-item">
+                    <h5>🔍 Validate Data (Input & Output)</h5>
+                    <p>Perform validation on both data sent to the API and data received from the API to prevent crashes.</p>
+                </div>
+                <div class="practice-item">
+                    <h5>💡 Use Interceptors for Common Tasks</h5>
+                    <p>Leverage OkHttp interceptors for logging, adding headers (e.g., authentication tokens), or caching.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="interactive-demo">
+            <h3 style="font-size: 2.2rem; margin-bottom: 20px; color: #7F39FB;">API Call Simulation</h3>
+            <p style="margin-bottom: 30px; color: #49454F;">Simulate an Android app making a network request and handling its response</p>
+            
+            <button class="demo-button" onclick="simulateApiCall()">📞 Make API Call</button>
+            
+            <div id="demoOutput" class="demo-output"></div>
+        </section>
+    </div>
+
+    <script>
+        function simulateApiCall() {
+            const outputDiv = document.getElementById('demoOutput');
+            const outcomes = [
+                {
+                    status: "success",
+                    message: `
+REQUEST: GET https://api.example.com/users/123
+HEADERS: Authorization: Bearer TOKEN_XYZ
+
+SIMULATING...
+
+RESPONSE: HTTP 200 OK
+BODY: {
+  "id": 123,
+  "name": "Jane Doe",
+  "email": "jane.doe@example.com"
+}
+UI Update: Displaying user profile for Jane Doe.
+Status: Success.
+`
+                },
+                {
+                    status: "error",
+                    message: `
+REQUEST: POST https://api.example.com/products
+HEADERS: Content-Type: application/json
+
+SIMULATING...
+
+RESPONSE: HTTP 401 Unauthorized
+BODY: {
+  "error": "Authentication Failed"
+}
+UI Update: Displaying "Session Expired. Please log in again."
+Status: Error.
+`
+                },
+                {
+                    status: "loading",
+                    message: `
+REQUEST: GET https://api.example.com/items?page=1
+
+SIMULATING...
+
+RESPONSE: (Pending)
+UI Update: Displaying loading spinner...
+Status: Loading.
+`
+                },
+                {
+                    status: "network_error",
+                    message: `
+REQUEST: GET https://api.example.com/data
+
+SIMULATING...
+
+RESPONSE: (Failed to connect)
+BODY: null
+UI Update: Displaying "Network Error. Please check your internet connection."
+Status: Network Error.
+`
+                }
+            ];
+
+            const randomOutcome = outcomes[Math.floor(Math.random() * outcomes.length)];
+            
+            outputDiv.textContent = randomOutcome.message;
+            outputDiv.classList.add('show');
+
+            setTimeout(() => {
+                outputDiv.classList.remove('show');
+            }, 7000); // Hide after 7 seconds
+        }
+    </script>
+</body>
+</html>
