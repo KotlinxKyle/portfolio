@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit Testing & Espresso - KotlinxKyle</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #1C1B1F;
+            background: linear-gradient(135deg, #7F39FB 0%, #6750A4 100%); /* Android theme gradient */
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            padding: 40px 0;
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 2px 2px 4px rgba(0,0,0,0.3), 0 0 20px rgba(255,255,255,0.2); }
+            to { text-shadow: 2px 2px 4px rgba(0,0,0,0.3), 0 0 30px rgba(255,255,255,0.4); }
+        }
+
+        .header h2 {
+            font-size: 1.8rem;
+            font-weight: 300;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .nav-back {
+            display: inline-block;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            font-size: 1.1rem;
+            padding: 10px 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-back:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .overview-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .overview-section h3 {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            color: #7F39FB; /* Kotlin purple */
+            text-align: center;
+        }
+
+        .overview-section p {
+            font-size: 1.2rem;
+            color: #49454F;
+            text-align: center;
+            line-height: 1.8;
+        }
+
+        .testing-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .type-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            border-top: 5px solid #7F39FB; /* Kotlin purple border */
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .type-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(127,57,251,0.1), transparent); /* Lighter Kotlin purple shimmer */
+            transition: left 0.6s ease;
+        }
+
+        .type-card:hover::before {
+            left: 100%;
+        }
+
+        .type-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+        }
+
+        .type-card h4 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: #1C1B1F;
+            text-align: center;
+        }
+
+        .type-card p {
+            color: #49454F;
+            font-size: 1.1rem;
+            line-height: 1.7;
+            text-align: left;
+        }
+        .type-card ul {
+            list-style: none;
+            margin-top: 15px;
+        }
+        .type-card ul li {
+            position: relative;
+            padding-left: 25px;
+            margin-bottom: 8px;
+            color: #49454F;
+        }
+        .type-card ul li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #7F39FB;
+            font-size: 1.5rem;
+            line-height: 1;
+        }
+
+        .testing-pyramid-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        .pyramid-concept {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 30px;
+        }
+
+        .pyramid-layer {
+            width: 80%;
+            max-width: 600px;
+            padding: 15px 25px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .pyramid-layer.unit {
+            background: linear-gradient(135deg, #4CAF50 0%, #3DDC84 100%);
+            width: 100%; /* Widest base */
+        }
+        .pyramid-layer.integration {
+            background: linear-gradient(135deg, #FFC107 0%, #FFD54F 100%);
+            width: 70%;
+        }
+        .pyramid-layer.ui {
+            background: linear-gradient(135deg, #7F39FB 0%, #6750A4 100%);
+            width: 40%; /* Narrowest top */
+        }
+
+        .pyramid-layer h5 {
+            font-size: 1.4rem;
+            margin-bottom: 5px;
+        }
+        .pyramid-layer p {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+
+        .best-practices {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        .best-practices h3 {
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            color: #7F39FB;
+        }
+
+        .practices-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .practice-item {
+            background: rgba(127,57,251,0.1); /* Lighter Kotlin purple background */
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 5px solid #7F39FB; /* Kotlin purple border */
+            transition: all 0.3s ease;
+        }
+
+        .practice-item:hover {
+            background: rgba(127,57,251,0.15);
+            transform: translateX(5px);
+        }
+
+        .practice-item h5 {
+            color: #7F39FB;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+
+        .practice-item p {
+            color: #49454F;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .interactive-demo {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .demo-button {
+            background: linear-gradient(135deg, #7F39FB 0%, #6750A4 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+        }
+
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(127,57,251,0.3);
+        }
+
+        .demo-output {
+            background: #282c34;
+            color: #abb2bf;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            text-align: left;
+            font-size: 0.95rem;
+            white-space: pre-wrap;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.5s ease;
+        }
+
+        .demo-output.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .code-snippet {
+            background: #282c34; /* Dark background for code */
+            color: #abb2bf; /* Light text for code */
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            font-size: 0.95rem;
+            overflow-x: auto;
+            margin-top: 15px;
+            line-height: 1.4;
+        }
+        .code-keyword { color: #c678dd; } /* Purple */
+        .code-string { color: #98c379; } /* Green */
+        .code-type { color: #e06c75; } /* Red */
+        .code-comment { color: #5c6370; font-style: italic; } /* Gray italic */
+        .code-function { color: #61afef; } /* Blue */
+        .code-output { color: #cccccc; } /* Light grey for console output */
+        .code-success { color: #50fa7b; } /* Bright green for pass */
+        .code-fail { color: #ff5555; } /* Bright red for fail */
+
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            .testing-types, .practices-list {
+                grid-template-columns: 1fr;
+            }
+            .pyramid-layer {
+                width: 100% !important; /* Ensure full width on small screens */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Unit Testing & Espresso</h1>
+            <h2>Ensuring Quality from Logic to UI</h2>
+            <a href="index.html" class="nav-back">← Back to Portfolio</a>
+        </header>
+
+        <section class="overview-section">
+            <h3>🧪 Building Trustworthy Android Applications</h3>
+            <p>Comprehensive testing is critical for delivering stable and reliable Android apps. My approach combines rigorous unit testing to validate individual components and business logic, with robust UI testing using Espresso to ensure the user interface behaves as expected, resulting in a high-quality product that users can trust.</p>
+        </section>
+
+        <div class="testing-types">
+            <div class="type-card">
+                <h4>Unit Testing: Logic Validation</h4>
+                <p>Focuses on testing the smallest testable units of code in isolation (e.g., functions, methods, classes). It ensures that individual components work correctly before integration.</p>
+                <ul>
+                    <li>**Speed:** Extremely fast feedback loop.</li>
+                    <li>**Isolation:** Tests components independently without external dependencies.</li>
+                    <li>**Tools:** JUnit (testing framework), Mockito/MockK (mocking frameworks for dependencies).</li>
+                    <li>**What to Test:** ViewModels, Repositories, Use Cases, utility classes.</li>
+                </ul>
+                <div class="code-snippet">
+                    <span class="code-comment">// Example JUnit test for a ViewModel function</span>
+                    <span class="code-keyword">class</span> <span class="code-type">MyViewModelTest</span> {
+                        <span class="code-keyword">@Test</span>
+                        <span class="code-keyword">fun</span> <span class="code-function">fetchUser_returnsCorrectData</span>() {
+                            <span class="code-type">val</span> <span class="code-keyword">mockRepository</span> = <span class="code-type">mockk</span>&lt;<span class="code-type">UserRepository</span>&gt;()
+                            <span class="code-keyword">coEvery</span> { <span class="code-keyword">mockRepository</span>.<span class="code-function">getUser</span>() } <span class="code-keyword">returns</span> <span class="code-type">User</span>(<span class="code-string">"Test"</span>)
+                            <span class="code-type">val</span> <span class="code-keyword">viewModel</span> = <span class="code-type">MyViewModel</span>(<span class="code-keyword">mockRepository</span>)
+
+                            <span class="code-keyword">viewModel</span>.<span class="code-function">fetchUser</span>()
+
+                            <span class="code-type">val</span> user = <span class="code-keyword">viewModel</span>.<span class="code-function">userLiveData</span>.<span class="code-function">getOrAwaitValue</span>()
+                            <span class="code-type">assertEquals</span>(<span class="code-string">"Test"</span>, user.<span class="code-keyword">name</span>)
+                        }
+                    }
+                </div>
+            </div>
+
+            <div class="type-card">
+                <h4>Espresso: UI Automation & Interaction</h4>
+                <p>An Android UI testing framework that enables you to write concise, beautiful, and reliable user interface tests. It synchronizes with the app's UI thread, ensuring tests are deterministic.</p>
+                <ul>
+                    <li>**Reliability:** Waits for UI operations to complete, reducing flakiness.</li>
+                    <li>**User Simulation:** Simulates user interactions (clicks, scrolls, text input).</li>
+                    <li>**Tools:** AndroidX Test, Espresso core, Espresso-contrib.</li>
+                    <li>**What to Test:** User flows, screen transitions, complex UI interactions.</li>
+                </ul>
+                <div class="code-snippet">
+                    <span class="code-comment">// Example Espresso test for a button click</span>
+                    <span class="code-keyword">@RunWith</span>(<span class="code-type">AndroidJUnit4</span>::<span class="code-keyword">class</span>)
+                    <span class="code-keyword">class</span> <span class="code-type">MainActivityTest</span> {
+                        <span class="code-keyword">@Rule</span> <span class="code-keyword">@JvmField</span>
+                        <span class="code-type">val</span> <span class="code-keyword">activityRule</span> = <span class="code-type">ActivityScenarioRule</span>(<span class="code-type">MainActivity</span>::<span class="code-keyword">class</span>)
+
+                        <span class="code-keyword">@Test</span>
+                        <span class="code-keyword">fun</span> <span class="code-function">button_click_showsToast</span>() {
+                            <span class="code-type">onView</span>(<span class="code-function">withId</span>(<span class="code-type">R</span>.id.my_button))
+                                .<span class="code-function">perform</span>(<span class="code-function">click</span>())
+
+                            <span class="code-type">onView</span>(<span class="code-function">withText</span>(<span class="code-string">"Button Clicked!"</span>))
+                                .<span class="code-function">inRoot</span>(<span class="code-function">withDecorView</span>(<span class="code-function">not</span>(<span class="code-function">is</span>(<span class="code-type">activityRule</span>.<span class="code-function">scenario</span>.<span class="code-function">getDecorView</span>()))))
+                                .<span class="code-function">check</span>(<span class="code-function">matches</span>(<span class="code-function">isDisplayed</span>()))
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+
+        <section class="testing-pyramid-section">
+            <h3 style="text-align: center; font-size: 2.2rem; margin-bottom: 20px; color: #7F39FB;">The Android Testing Pyramid</h3>
+            <p style="text-align: center; margin-bottom: 30px; color: #49454F;">A strategic approach to balancing different test types for optimal coverage and efficiency</p>
+            
+            <div class="pyramid-concept">
+                <div class="pyramid-layer ui">
+                    <h5>UI Tests (Espresso)</h5>
+                    <p>Fewer tests, higher cost, slower execution. Cover critical user flows.</p>
+                </div>
+                <div class="pyramid-layer integration">
+                    <h5>Integration Tests</h5>
+                    <p>Moderate number, moderate cost/speed. Test interaction between components (e.g., ViewModel & Repository).</p>
+                </div>
+                <div class="pyramid-layer unit">
+                    <h5>Unit Tests (JUnit)</h5>
+                    <p>Largest number, lowest cost, fastest execution. Cover individual logic components.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="best-practices">
+            <h3>⚙️ Testing Best Practices for Android</h3>
+            <div class="practices-list">
+                <div class="practice-item">
+                    <h5>🎯 Focus on Unit Tests</h5>
+                    <p>Prioritize unit tests for business logic as they are fast, isolated, and provide quick feedback.</p>
+                </div>
+                <div class="practice-item">
+                    <h5>📝 Use Mocking Frameworks</h5>
+                    <p>Employ Mockito/MockK to isolate units under test by mocking their dependencies.</p>
+                </div>
+                <div class="practice-item">
+                    <h5>🔄 Write Readable Tests</h5>
+                    <p>Follow Arrange-Act-Assert (AAA) pattern for clear and maintainable test code.</p>
+                </div>
+                <div class="practice-item">
+                    <h5>📊 Integrate into CI/CD</h5>
+                    <p>Automate test execution in your Continuous Integration pipeline for early bug detection.</p>
+                </div>
+                <div class="practice-item">
+                    <h5>🔍 Test UI on Real Devices/Emulators</h5>
+                    <p>Run Espresso tests on a variety of devices and Android versions to ensure broad compatibility.</p>
+                </div>
+                <div class="practice-item">
+                    <h5>💡 Isolate UI Tests</h5>
+                    <p>Ensure Espresso tests are independent and reset app state between tests to prevent flakiness.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="interactive-demo">
+            <h3 style="font-size: 2.2rem; margin-bottom: 20px; color: #7F39FB;">Testing Simulation: Unit vs. UI</h3>
+            <p style="margin-bottom: 30px; color: #49454F;">Observe a quick simulation of different test types running</p>
+            
+            <button class="demo-button" onclick="runTestSimulation('unit')">🧪 Run Unit Tests</button>
+            <button class="demo-button" onclick="runTestSimulation('espresso')">📱 Run Espresso Tests</button>
+            
+            <div id="demoOutput" class="demo-output"></div>
+        </section>
+    </div>
+
+    <script>
+        function runTestSimulation(type) {
+            const outputDiv = document.getElementById('demoOutput');
+            let messages = [];
+
+            if (type === 'unit') {
+                messages = [
+                    "Starting Unit Test Suite (JUnit + MockK)...",
+                    "Running MyViewModelTest.fetchUser_returnsCorrectData... <span class='code-success'>PASS</span>",
+                    "Running UserRepositoryTest.saveUser_storesDataCorrectly... <span class='code-success'>PASS</span>",
+                    "Running UtilityFunctionsTest.formatDate_returnsCorrectFormat... <span class='code-success'>PASS</span>",
+                    "Unit Test Suite Finished: 3 Tests, 3 Passed, 0 Failed, 0 Skipped (Took 0.2s)",
+                    "<span class='code-success'>✅ Unit tests passed successfully! Logic is sound.</span>"
+                ];
+            } else if (type === 'espresso') {
+                messages = [
+                    "Starting Espresso UI Test Suite (AndroidX Test)...",
+                    "Running MainActivityTest.button_click_showsToast... <span class='code-output'>(App launched, performing click)</span>",
+                    "Running MainActivityTest.loginFlow_success_navigatesToDashboard... <span class='code-fail'>FAIL</span>",
+                    "UI Test Suite Finished: 2 Tests, 1 Passed, 1 Failed, 0 Skipped (Took 15.8s)",
+                    "<span class='code-fail'>❌ Espresso tests failed! UI bug detected in login flow.</span>"
+                ];
+            }
+            
+            let currentMessageIndex = 0;
+            outputDiv.textContent = ""; // Clear previous output
+            outputDiv.classList.add('show');
+
+            const interval = setInterval(() => {
+                if (currentMessageIndex < messages.length) {
+                    outputDiv.innerHTML += messages[currentMessageIndex] + "\n";
+                    currentMessageIndex++;
+                } else {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        outputDiv.classList.remove('show');
+                    }, 3000); // Hide after 3 seconds
+                }
+            }, 1000); // Display new message every 1 second
+        }
+    </script>
+</body>
+</html>
