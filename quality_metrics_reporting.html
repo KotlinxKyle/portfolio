@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quality Metrics & Reporting - KotlinxKyle</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #1C1B1F;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            padding: 40px 0;
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 2px 2px 4px rgba(0,0,0,0.3), 0 0 20px rgba(255,255,255,0.2); }
+            to { text-shadow: 2px 2px 4px rgba(0,0,0,0.3), 0 0 30px rgba(255,255,255,0.4); }
+        }
+
+        .header h2 {
+            font-size: 1.8rem;
+            font-weight: 300;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .nav-back {
+            display: inline-block;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            font-size: 1.1rem;
+            padding: 10px 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-back:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .overview-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .overview-section h3 {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            color: #667eea;
+            text-align: center;
+        }
+
+        .overview-section p {
+            font-size: 1.2rem;
+            color: #49454F;
+            text-align: center;
+            line-height: 1.8;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .metric-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            border-top: 5px solid;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(102,126,234,0.1), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .metric-card:hover::before {
+            left: 100%;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+        }
+
+        .metric-card:nth-child(1) { border-top-color: #ff6b6b; } /* Defect Density */
+        .metric-card:nth-child(2) { border-top-color: #4ecdc4; } /* Test Coverage */
+        .metric-card:nth-child(3) { border-top-color: #f9ca24; } /* Test Pass Rate */
+        .metric-card:nth-child(4) { border-top-color: #3742fa; } /* MTTR/MTTD */
+        .metric-card:nth-child(5) { border-top-color: #ffa502; } /* Automation Coverage */
+        .metric-card:nth-child(6) { border-top-color: #2ed573; } /* Requirements Traceability */
+
+        .metric-card h4 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #1C1B1F;
+            text-align: center;
+        }
+
+        .metric-card p {
+            color: #49454F;
+            font-size: 1rem;
+            line-height: 1.6;
+            text-align: center;
+        }
+
+        .reporting-principles {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        .principle-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .principle-item {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .principle-item:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(102,126,234,0.3);
+        }
+
+        .principle-item h5 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .principle-item p {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        .tools-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .tool-item {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .tool-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .tool-item .tool-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .tool-item h4 {
+            font-size: 1.1rem;
+            color: #333;
+        }
+
+        .best-practices {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        .best-practices h3 {
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            color: #667eea;
+        }
+
+        .practices-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .practice-item {
+            background: rgba(102,126,234,0.1);
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 5px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .practice-item:hover {
+            background: rgba(102,126,234,0.15);
+            transform: translateX(5px);
+        }
+
+        .practice-item h5 {
+            color: #667eea;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+
+        .practice-item p {
+            color: #49454F;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .interactive-demo {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .demo-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+        }
+
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102,126,234,0.3);
+        }
+
+        .chart-container {
+            margin-top: 30px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+            height: 250px; /* Fixed height for consistent demo */
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            padding-bottom: 0;
+            position: relative;
+        }
+
+        .chart-bar {
+            width: 15%;
+            background: linear-gradient(to top, #4ecdc4, #667eea);
+            transition: height 0.8s ease-out;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+            position: relative;
+            /* Added padding-bottom to allow space for label within the bar */
+            padding-bottom: 30px; /* Adjust as needed for label height */
+        }
+
+        .chart-bar span:first-child { /* This targets the percentage/number at the top of the bar */
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #49454F;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .chart-label { /* This targets the text label at the bottom *within* the bar */
+            position: absolute;
+            bottom: 5px; /* Position at the bottom of the bar with a little padding */
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.9rem;
+            color: #666;
+            white-space: nowrap; /* Prevent label from wrapping if it gets too long */
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            .metrics-grid, .reporting-principles, .tools-grid {
+                grid-template-columns: 1fr;
+            }
+            .chart-container {
+                flex-direction: column;
+                height: auto;
+                align-items: center;
+                padding-bottom: 20px;
+            }
+            .chart-bar {
+                width: 80%;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Quality Metrics & Reporting</h1>
+            <h2>Data-Driven Insights for Continuous Improvement</h2>
+            <a href="index.html" class="nav-back">← Back to Portfolio</a>
+        </header>
+
+        <section class="overview-section">
+            <h3>📊 Measuring What Matters for Quality</h3>
+            <p>Quality metrics and effective reporting transform abstract quality goals into tangible, actionable insights. By systematically collecting and analyzing data, we can identify trends, pinpoint areas for improvement, and demonstrate the tangible value of our testing efforts, driving continuous enhancement of the software product and process.</p>
+        </section>
+
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <h4>🐞 Defect Density</h4>
+                <p>Number of defects per unit of code or functionality, indicating product quality.</p>
+            </div>
+            <div class="metric-card">
+                <h4>✅ Test Coverage</h4>
+                <p>Percentage of requirements, code lines, or functionalities covered by test cases.</p>
+            </div>
+            <div class="metric-card">
+                <h4>👍 Test Pass Rate</h4>
+                <p>Ratio of passed test cases to total executed test cases, reflecting stability.</p>
+            </div>
+            <div class="metric-card">
+                <h4>⏱️ MTTD / MTTR</h4>
+                <p>Mean Time To Detect and Mean Time To Resolve defects, showing efficiency of bug lifecycle.</p>
+            </div>
+            <div class="metric-card">
+                <h4>🤖 Automation Coverage</h4>
+                <p>Percentage of automated vs. manual test cases, indicating automation efficiency.</p>
+            </div>
+            <div class="metric-card">
+                <h4>🔗 Requirements Traceability</h4>
+                <p>Ensuring every requirement is linked to test cases, defects, and code for completeness.</p>
+            </div>
+        </div>
+
+        <section class="reporting-principles">
+            <h3 style="text-align: center; font-size: 2.2rem; margin-bottom: 20px; color: #667eea;">Principles of Effective Quality Reporting</h3>
+            <p style="text-align: center; margin-bottom: 30px; color: #49454F;">Transforming raw data into meaningful insights</p>
+            
+            <div class="principle-list">
+                <div class="principle-item">
+                    <h5>🎯 Actionable Insights</h5>
+                    <p>Reports should highlight problems and guide decision-making, not just present numbers.</p>
+                </div>
+                <div class="principle-item">
+                    <h5>📈 Timeliness & Frequency</h5>
+                    <p>Deliver reports regularly and promptly to enable timely interventions.</p>
+                </div>
+                <div class="principle-item">
+                    <h5>🗣️ Tailored for Audience</h5>
+                    <p>Customize reports for different stakeholders (executives, developers, product owners).</p>
+                </div>
+                <div class="principle-item">
+                    <h5>📊 Visual & Understandable</h5>
+                    <p>Use charts, graphs, and clear language to convey complex data easily.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="tools-section">
+            <h3 style="text-align: center; font-size: 2.2rem; margin-bottom: 20px; color: #667eea;">Tools for Quality Metrics & Reporting</h3>
+            <div class="tools-grid">
+                <div class="tool-item">
+                    <div class="tool-icon">📊</div>
+                    <h4>JIRA Dashboards</h4>
+                </div>
+                <div class="tool-item">
+                    <div class="tool-icon">📈</div>
+                    <h4>Power BI</h4>
+                </div>
+                <div class="tool-item">
+                    <div class="tool-icon">📈</div>
+                    <h4>Tableau</h4>
+                </div>
+                <div class="tool-item">
+                    <div class="tool-icon">📦</div>
+                    <h4>Test Management Tools (e.g., TestRail, Zephyr)</h4>
+                </div>
+                <div class="tool-item">
+                    <div class="tool-icon">✨</div>
+                    <h4>Allure Reports</h4>
+                </div>
+                <div class="tool-item">
+                    <div class="tool-icon">⚙️</div>
+                    <h4>Custom Scripts (Python/SQL)</h4>
+                </div>
+            </div>
+        </section>
+
+        <section class="best-practices">
+            <h3>⚙️ Best Practices for Metrics & Reporting</h3>
+            <div class="practices-list">
+                <div class="practice-item">
+                    <h5>🎯 Define Clear KPIs</h5>
+                    <p>Identify Key Performance Indicators that directly reflect quality goals and project health.</p>
+                </div>
+                <div class="practice-item">
+                    <h5>📝 Automate Data Collection</h5>
+                    <p>Reduce manual effort and human error by automating metric collection from various sources.</p>
+                </div>
+                <div class="practice-item">
+                    <h5>🔄 Regular Review & Refinement</h5>
+                    <p>Continuously evaluate if chosen metrics are still relevant and refine reporting methods.</p>
+                </div>
+                <div class="practice-item">
+                    <h5>📊 Trend Analysis Over Snapshots</h5>
+                    <p>Focus on trends and patterns over time rather than isolated data points for better insights.</p>
+                </div>
+                <div class="practice-item">
+                    <h5>🔍 Contextualize Data</h5>
+                    <p>Always provide context for metrics to make them meaningful (e.g., "why" a metric is high or low).</p>
+                </div>
+                <div class="practice-item">
+                    <h5>💡 Drive Actionable Discussions</h5>
+                    <p>Use reports as a basis for team discussions and decisions to improve quality processes.</p>
+                </div>
+                <div class="practice-item">
+                    <h5>🛠️ Integrate with CI/CD</h5>
+                    <p>Display real-time quality feedback directly within continuous integration/delivery pipelines.</p>
+                </div>
+                <div class="practice-item">
+                    <h5>🗣️ Encourage Transparency</h5>
+                    <p>Make quality metrics accessible and understandable to all team members and stakeholders.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="interactive-demo">
+            <h3 style="font-size: 2.2rem; margin-bottom: 20px; color: #667eea;">Live Metrics Dashboard Simulation</h3>
+            <p style="margin-bottom: 30px; color: #49454F;">See a quick update on key quality metrics</p>
+            
+            <button class="demo-button" onclick="updateMetrics()">🔄 Update Dashboard</button>
+            
+            <div class="chart-container" id="metricsChart">
+                <div class="chart-bar" style="height: 60%;" data-value="60">
+                    <span>60%</span>
+                    <span class="chart-label">Test Pass Rate</span>
+                </div>
+                <div class="chart-bar" style="height: 85%;" data-value="85">
+                    <span>85%</span>
+                    <span class="chart-label">Automation Coverage</span>
+                </div>
+                <div class="chart-bar" style="height: 30%;" data-value="30">
+                    <span>30</span>
+                    <span class="chart-label">Open Bugs</span>
+                </div>
+                <div class="chart-bar" style="height: 90%;" data-value="90">
+                    <span>90%</span>
+                    <span class="chart-label">Requirement Coverage</span>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        function updateMetrics() {
+            const bars = document.querySelectorAll('.chart-bar');
+            bars.forEach(bar => {
+                let newValue;
+                // Get the label text from the inner span with class 'chart-label'
+                const label = bar.querySelector('.chart-label').textContent;
+
+                if (label.includes("Test Pass Rate")) {
+                    newValue = Math.floor(Math.random() * (98 - 75 + 1)) + 75; // 75-98%
+                    bar.style.height = `${newValue}%`;
+                    bar.querySelector('span:first-child').textContent = `${newValue}%`; // Update top span
+                } else if (label.includes("Automation Coverage")) {
+                    newValue = Math.floor(Math.random() * (95 - 60 + 1)) + 60; // 60-95%
+                    bar.style.height = `${newValue}%`;
+                    bar.querySelector('span:first-child').textContent = `${newValue}%`; // Update top span
+                } else if (label.includes("Open Bugs")) {
+                    newValue = Math.floor(Math.random() * (40 - 5 + 1)) + 5; // 5-40 bugs
+                    bar.style.height = `${(newValue / 40) * 100}%`; /* Scale for chart display */
+                    bar.querySelector('span:first-child').textContent = `${newValue}`; // Update top span
+                } else if (label.includes("Requirement Coverage")) {
+                    newValue = Math.floor(Math.random() * (100 - 80 + 1)) + 80; // 80-100%
+                    bar.style.height = `${newValue}%`;
+                    bar.querySelector('span:first-child').textContent = `${newValue}%`; // Update top span
+                }
+            });
+        }
+    </script>
+</body>
+</html>
