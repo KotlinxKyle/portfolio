@@ -5,26 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KotlinxKyle - Quality Analyst & Android Developer</title>
     <style>
+        /* Universal Box-Sizing */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
+        /* Body Styling */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
             color: #1C1B1F;
             background: linear-gradient(135deg, #7F39FB 0%, #6750A4 100%);
             min-height: 100vh;
+            display: flex; /* Use flexbox for body to center content */
+            flex-direction: column;
         }
 
+        /* Main Container */
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
+            flex-grow: 1; /* Allow container to grow and push footer down */
         }
 
+        /* Header Styling */
         .header {
             text-align: center;
             color: white;
@@ -50,6 +57,7 @@
             opacity: 0.9;
         }
 
+        /* Money Section Styling */
         .money-section {
             background: linear-gradient(135deg, #3DDC84 0%, #4CAF50 100%);
             color: white;
@@ -90,13 +98,17 @@
             border-left: 5px solid rgba(255,255,255,0.5);
         }
 
+        /* Skills Grid (Main Sections) */
         .skills-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            display: flex; /* Changed from grid to flex */
+            flex-wrap: wrap; /* Allows skill cards to wrap on smaller screens */
             gap: 40px;
             margin-top: 40px;
+            justify-content: center; /* Center skill cards when they wrap */
+            align-items: stretch; /* Make skill cards stretch to the same height */
         }
 
+        /* Individual Skill Card Styling */
         .skill-card {
             background: rgba(255, 255, 255, 0.95);
             padding: 40px;
@@ -107,6 +119,11 @@
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+            flex: 1 1 calc(50% - 20px); /* Adjust flex basis for two columns with gap */
+            max-width: 580px; /* Max width for each skill card */
+            min-width: 300px; /* Min width for responsiveness */
+            display: flex; /* Added flex for internal content alignment */
+            flex-direction: column; /* Stack content inside skill card */
         }
 
         .skill-card::before {
@@ -138,10 +155,9 @@
             gap: 15px;
         }
 
-        /* Modified CSS for icons */
+        /* Icon Styling (Fixed from previous bug) */
         .skill-card .icon {
             font-size: 2.5rem;
-            /* Remove the gradient and set specific colors */
             -webkit-background-clip: unset; /* Override previous declaration */
             -webkit-text-fill-color: unset; /* Override previous declaration */
             background-clip: unset; /* Override previous declaration */
@@ -156,6 +172,7 @@
             color: #7F39FB; /* Purple for Android Development icon */
         }
 
+        /* Border colors for skill cards */
         .qa-card {
             border-top: 5px solid #3DDC84;
         }
@@ -164,9 +181,24 @@
             border-top: 5px solid #7F39FB;
         }
 
+        .description {
+            margin: 20px 0;
+            color: #49454F;
+            font-size: 1.1rem;
+            line-height: 1.7;
+            flex-grow: 1; /* Allows description to take available space */
+        }
+
+        /* Skill List Styling */
         .skill-list {
             list-style: none;
             margin-top: 20px;
+            margin-bottom: 30px; /* Add space between list and repo cards */
+            padding-left: 0; /* Ensure no default padding */
+            flex-grow: 1; /* Allows skill list to take available space */
+            display: flex; /* Make it a flex container */
+            flex-direction: column; /* Stack list items vertically */
+            justify-content: flex-start; /* Align list items to the start */
         }
 
         .skill-list li {
@@ -175,6 +207,7 @@
             position: relative;
             padding-left: 30px;
             transition: all 0.3s ease;
+            font-size: 1rem; /* Adjust font size for readability */
         }
 
         .skill-list li:hover {
@@ -186,7 +219,7 @@
             content: '▶';
             position: absolute;
             left: 0;
-            color: #3DDC84;
+            color: #3DDC84; /* Green for the bullet point */
             font-size: 0.8rem;
         }
 
@@ -194,13 +227,109 @@
             border-bottom: none;
         }
 
-        .description {
-            margin: 20px 0;
-            color: #49454F;
-            font-size: 1.1rem;
-            line-height: 1.7;
+        .skill-list li a {
+            color: #3DDC84; /* Initial Android green for links */
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s ease;
         }
 
+        .skill-list li a:hover {
+            color: #7F39FB; /* Kotlin purple on hover */
+        }
+
+
+        /* Repo Container - holds individual repo cards */
+        .repo-container {
+            display: flex;
+            flex-wrap: wrap; /* Allows repo cards to wrap within the skill card */
+            gap: 15px; /* Space between repo cards */
+            margin-top: 20px;
+            justify-content: center; /* Center repo cards within their container */
+            align-items: flex-start; /* Align repo cards to the top within their container */
+        }
+
+        /* Individual Repo Card Styling */
+        .repo-card {
+            background-color: #F8F8F8; /* Lighter background for repos */
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: all 0.2s ease;
+            max-width: 280px; /* Skinnier */
+            min-height: 160px; /* Taller */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Distribute content vertically */
+            border: 1px solid rgba(0,0,0,0.05);
+            text-decoration: none; /* Remove underline from anchor */
+            color: inherit; /* Inherit text color */
+        }
+
+        .repo-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+            border-color: #7F39FB; /* Highlight border on hover */
+        }
+
+        .repo-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .repo-header svg {
+            margin-right: 8px;
+            color: #49454F; /* Icon color */
+        }
+
+        .repo-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1C1B1F;
+            margin-right: 10px;
+        }
+
+        .public-badge {
+            background-color: #E0E0E0;
+            color: #49454F;
+            font-size: 0.75rem;
+            padding: 4px 8px;
+            border-radius: 10px;
+            font-weight: 500;
+        }
+
+        .repo-description {
+            font-size: 0.9rem;
+            color: #49454F;
+            line-height: 1.4;
+            margin-bottom: 15px;
+            flex-grow: 1; /* Allow description to take available space */
+        }
+
+        .repo-footer {
+            display: flex;
+            align-items: center;
+            font-size: 0.85rem;
+            color: #49454F;
+        }
+
+        .language-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+
+        /* Specific language colors */
+        .language-html .language-dot { background-color: #E34C26; } /* HTML Orange */
+        .language-kotlin .language-dot { background-color: #7F52FF; } /* Kotlin Purple */
+        .language-java .language-dot { background-color: #B07219; } /* Java Orange-Brown */
+        .language-css .language-dot { background-color: #1572B6; } /* CSS Blue */
+        .language-javascript .language-dot { background-color: #F7DF1E; } /* JavaScript Yellow */
+
+
+        /* Contact Section Styling */
         .contact-section {
             text-align: center;
             margin-top: 60px;
@@ -221,11 +350,26 @@
             opacity: 0.9;
         }
 
-        @media (max-width: 768px) {
-            .skills-grid {
-                grid-template-columns: 1fr;
+        /* Pulse Animation */
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); } /* Slightly reduced pulse for less distraction */
+            100% { transform: scale(1); }
+        }
+
+        /* Media Queries for Responsiveness */
+        @media (max-width: 1000px) {
+            .skill-card {
+                flex: 1 1 100%; /* Stack skill cards on smaller screens */
+                max-width: 600px; /* Keep a reasonable max-width for stacked cards */
             }
-            
+        }
+
+        @media (max-width: 768px) {
             .header h1 {
                 font-size: 2.5rem;
             }
@@ -233,27 +377,37 @@
             .skill-card {
                 padding: 30px 20px;
             }
+
+            .repo-card {
+                max-width: 100%; /* Allow repo cards to take full width on very small screens */
+            }
         }
 
-        .skill-list li a {
-            color: #3DDC84; /* Initial Android green */
-            text-decoration: none;
-            font-weight: bold;
-            transition: color 0.3s ease;
-        }
-
-        .skill-list li a:hover {
-            color: #7F39FB; /* Kotlin purple on hover */
-        }
-
-        .pulse {
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            .header h2 {
+                font-size: 1.2rem;
+            }
+            .money-section h3 {
+                font-size: 1.5rem;
+            }
+            .money-section p {
+                font-size: 1rem;
+            }
+            .skill-card h3 {
+                font-size: 1.8rem;
+            }
+            .skill-card .icon {
+                font-size: 2rem;
+            }
+            .contact-section h3 {
+                font-size: 1.5rem;
+            }
+            .contact-section p {
+                font-size: 1rem;
+            }
         }
     </style>
 </head>
@@ -285,6 +439,7 @@
                 <p class="description">
                     Dedicated to ensuring software quality through comprehensive testing methodologies and meticulous attention to detail. I find bugs before they find users (and before they find my paycheck).
                 </p>
+                <!-- Original Skill List - Re-added -->
                 <ul class="skill-list">
                     <li><a href="testing.html">Manual & Automated Testing</a></li>
                     <li><a href="design_and_execution.html">Test Case Design & Execution</a></li>
@@ -297,6 +452,46 @@
                     <li><a href="test_planning_strategy.html">Test Planning & Strategy</a></li>
                     <li><a href="quality_metrics_reporting.html">Quality Metrics & Reporting</a></li>
                 </ul>
+                <!-- Repository Container for QA -->
+                <div class="repo-container">
+                    <a href="https://github.com/KotlinxKyle/portfolio" target="_blank" class="repo-card">
+                        <div class="repo-header">
+                            <!-- GitHub folder icon (inline SVG for simplicity) -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-folder-git-2"><path d="M3 17a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/><path d="M14 17a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-6a2 2 0 0 1-2-2Z"/><path d="M14 15V5a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v7"/><path d="M17 15V3a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v7"/></svg>
+                            <span class="repo-title">QA Project 1</span>
+                            <span class="public-badge">Public</span>
+                        </div>
+                        <p class="repo-description">Sample project demonstrating quality assurance processes and testing methodologies.</p>
+                        <div class="repo-footer">
+                            <span class="language-dot language-html"></span>
+                            <span class="language-name">HTML</span>
+                        </div>
+                    </a>
+                    <a href="https://github.com/KotlinxKyle/portfolio" target="_blank" class="repo-card">
+                        <div class="repo-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-folder-git-2"><path d="M3 17a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/><path d="M14 17a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-6a2 2 0 0 1-2-2Z"/><path d="M14 15V5a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v7"/><path d="M17 15V3a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v7"/></svg>
+                            <span class="repo-title">QA Project 2</span>
+                            <span class="public-badge">Public</span>
+                        </div>
+                        <p class="repo-description">Example of test case design and execution, including bug tracking and reporting.</p>
+                        <div class="repo-footer">
+                            <span class="language-dot language-css"></span>
+                            <span class="language-name">CSS</span>
+                        </div>
+                    </a>
+                    <a href="https://github.com/KotlinxKyle/portfolio" target="_blank" class="repo-card">
+                        <div class="repo-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-folder-git-2"><path d="M3 17a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/><path d="M14 17a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-6a2 2 0 0 1-2-2Z"/><path d="M14 15V5a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v7"/><path d="M17 15V3a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v7"/></svg>
+                            <span class="repo-title">QA Project 3</span>
+                            <span class="public-badge">Public</span>
+                        </div>
+                        <p class="repo-description">Showcasing automated testing frameworks and continuous integration practices.</p>
+                        <div class="repo-footer">
+                            <span class="language-dot language-javascript"></span>
+                            <span class="language-name">JavaScript</span>
+                        </div>
+                    </a>
+                </div>
             </div>
 
             <div class="skill-card android-card">
@@ -307,6 +502,7 @@
                 <p class="description">
                     Crafting robust and user-friendly Android applications using modern development practices and Kotlin expertise. Building apps that users love (and that actually work).
                 </p>
+                <!-- Original Skill List - Re-added -->
                 <ul class="skill-list">
                     <li><a href="kotlin_programming.html">Kotlin Programming</a></li>
                     <li><a href="android_sdk_studio.html">Android SDK & Android Studio</a></li>
@@ -321,6 +517,45 @@
                     <li><a href="unit_testing_and_espresso.html">Unit Testing & Espresso</a></li>
                     <li><a href="playstore_deployment.html">Play Store Deployment</a></li>
                 </ul>
+                <!-- Repository Container for Android -->
+                <div class="repo-container">
+                    <a href="https://github.com/KotlinxKyle/portfolio" target="_blank" class="repo-card">
+                        <div class="repo-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-folder-git-2"><path d="M3 17a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/><path d="M14 17a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-6a2 2 0 0 1-2-2Z"/><path d="M14 15V5a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v7"/><path d="M17 15V3a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v7"/></svg>
+                            <span class="repo-title">Android App 1</span>
+                            <span class="public-badge">Public</span>
+                        </div>
+                        <p class="repo-description">A sample Android application built with Kotlin and modern Android SDK features.</p>
+                        <div class="repo-footer">
+                            <span class="language-dot language-kotlin"></span>
+                            <span class="language-name">Kotlin</span>
+                        </div>
+                    </a>
+                    <a href="https://github.com/KotlinxKyle/portfolio" target="_blank" class="repo-card">
+                        <div class="repo-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-folder-git-2"><path d="M3 17a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/><path d="M14 17a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-6a2 2 0 0 1-2-2Z"/><path d="M14 15V5a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v7"/><path d="M17 15V3a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v7"/></svg>
+                            <span class="repo-title">Android App 2</span>
+                            <span class="public-badge">Public</span>
+                        </div>
+                        <p class="repo-description">Demonstrating MVVM architecture, REST API integration, and Room Database usage.</p>
+                        <div class="repo-footer">
+                            <span class="language-dot language-java"></span>
+                            <span class="language-name">Java</span>
+                        </div>
+                    </a>
+                    <a href="https://github.com/KotlinxKyle/portfolio" target="_blank" class="repo-card">
+                        <div class="repo-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-folder-git-2"><path d="M3 17a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/><path d="M14 17a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-6a2 2 0 0 1-2-2Z"/><path d="M14 15V5a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v7"/><path d="M17 15V3a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v7"/></svg>
+                            <span class="repo-title">Android App 3</span>
+                            <span class="public-badge">Public</span>
+                        </div>
+                        <p class="repo-description">Exploring Jetpack Compose for UI development and Coroutines for asynchronous tasks.</p>
+                        <div class="repo-footer">
+                            <span class="language-dot language-kotlin"></span>
+                            <span class="language-name">Kotlin</span>
+                        </div>
+                    </a>
+                </div>
             </div>
         </div>
 
